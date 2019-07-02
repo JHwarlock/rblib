@@ -1,0 +1,11 @@
+import sys
+from seqio import faidx
+
+class MutPattern(object):
+	def __init__(self,genome):# genome need be indexed
+		self.genome  = faidx(genome)
+	def apobec(chrom,pos,ref,alt): # must be   " strand +  0-based position "
+		context = self.genome.fetch(chrom,pos-1,pos+2) # get XAX  for ref A
+		
+
+

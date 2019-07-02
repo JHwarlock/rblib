@@ -1,0 +1,153 @@
+#!/usr/bin/env python
+import sys
+from rblib.mutilstats import Pdsampleinfo,Pdmatrix
+import numpy as np
+from optparse import OptionParser,OptionGroup
+def readsninfo(sampleinfo,phenotype="category"):
+	sinfo = Pdsampleinfo()
+	ret = sinfo.parse_sampleinfo(sampleinfo,phenotype=phenotype)
+	#print sinfo.df
+	if ret: return None
+	else: return sinfo
+
+def readmatrix(matrixfile,cutoff=-np.inf,percent=0.0,addtolog=0.000,log2tr=0):
+	data = Pdmatrix()
+	ret = data.parse_matrix_anno(matrixfile,cutoff=cutoff,percent=percent,addtolog=addtolog,log2tr=log2tr,missvalue=np.nan)
+	if ret: return None
+	else:
+		return data
+
+## study method
+def plotpower():
+	rho = np.linspace(0,1,41)
+	rho1 = rho ** 1
+	rho2 = rho ** 2
+	rho3 = rho ** 4
+	rho4 = rho ** 6
+	rho5 = rho ** 8
+	rho6 = rho.copy()
+	rho6[rho >= 0.8] = 1.0
+	rho6[rho < 0.8]  = 0.0
+	print "#rho\tpower=1\tpower=2\tpower=4\tpower=6\tpower=8\tsgn=0.8"
+	for i in xrange(len(rho)):
+		print "\t".join(map(str,[rho[i],rho1[i],rho2[i],rho3[i],rho4[i],rho5[i],rho6[i]]))
+	return 0
+
+from rblib.corr_dist import nancorrmatrix_self_mp2
+from rblib.sfnet import SFnet,rddm
+import time
+from rklib.utils import dirDetectCreate,monitor_controlC
+
+def main():
+	start_time = time.time()
+	usage = "usage: %prog [options] matrix_like_data.anno"
+	description = "Contact: Rong Zhengqin <rongzhengqin@basepedia.com>"
+	parser = OptionParser(usage,version="%prog 1.0.1 beta",description = description)
+	Common_group = OptionGroup(parser,'Common Options')
+	WGCNA_group = OptionGroup(parser,'WGCNA Options')
+	Common_group.add_option('-t',dest='phenotype',help="type of phenotype, category or quantificat [default = category]",metavar='STR',type='choice',choices=["category","quantificat"],default='category')
+	Common_group.add_option('-l',dest='log2tr',help='to do log2 transform for expression data, log(x+addbg)',action='store_true')
+	Common_group.add_option('-s',dest='sampleinfo',help='samples information, using sampleinfo.txt format',metavar='FILE',type='string',default=None)	
+	Common_group.add_option('--tmpdir',dest='tmpdir',help='Temp Directory [tmpdir]',metavar='DIR',type='string',default='tmppath')
+	
+	Common_group.add_option('-o',dest='outdir',help='result outdir [PWD]',metavar='DIR',type='string',default="./")
+	Common_group.add_option('--pcut',dest='pcut',help='output edges\' pvalue < FLOAT[0.05]',metavar='FLOAT',type='float',default=0.05)
+
+	Common_group.add_option('--addbg',dest='addbg',help='add bg for log transform [0]',metavar='FLOAT',type='float',default=0.0)
+	Common_group.add_option('--noise',dest='noise',help='noise data (<FLOAT) to ignore[-inf]',metavar='FLOAT',type='float',default=-np.inf)
+	Common_group.add_option('--percent',dest='percent',help='ignore gene, whose miss value fraction > percent [0.4], Note: missing value marked with "NAN"',metavar='FLOAT',type='float',default=0.4)
+	Common_group.add_option('--nprocessor',dest='nprocessor',help='number of processor [8]',metavar='INT',type='int',default=8)
+	
+
+	
+	WGCNA_group.add_option('--dp',dest='dp',help='to determine the power parameters',action='store_true')
+	WGCNA_group.add_option('--corrmethod',dest='corrmethod',help='use 0: pearson, 1:spearman. [0]',metavar='INT',type='int',default=0)
+	WGCNA_group.add_option('--power',dest='power',help='power parameter',metavar='INT',type='int',default=6)
+	WGCNA_group.add_option('--signtype',dest='signtype',help='signtype corr2adjacency, use 0: no direction, 1: directions, 2: only 1 direction. [0]',metavar='INT',type='int',default=0)
+	WGCNA_group.add_option('--minsize',dest='minsize',help='minsize for cluster module [30]',metavar='INT',type='int',default=30)
+	WGCNA_group.add_option('--ncluster',dest='ncluster',help='static cluster module division [20]',metavar='INT',type='int',default=20)
+
+	parser.add_option_group(Common_group)
+	parser.add_option_group(WGCNA_group)
+
+	(options, args) = parser.parse_args()
+	
+	if len(args) != 1:
+		parser.print_help()
+		return -1
+	ret = 1
+	
+	sys.stderr.write("[INFO] task start\n")
+
+	cutoff = np.float(options.noise)
+	percent = np.float(options.percent)
+	addtolog = np.float(options.addbg)
+	nprocessor = int(options.nprocessor)
+	log2tr = 1 if options.log2tr else 0
+	tmppath = options.tmpdir
+	outdir  = options.outdir
+	dirDetectCreate(tmppath)
+	dirDetectCreate(outdir)
+	corrmethod = options.corrmethod
+	power = options.power
+	signtype = options.signtype
+	minsize  = options.minsize
+	pcut= float(options.pcut)
+	ncluster = int(options.ncluster)
+
+	sys.stderr.write("[INFO] read sample info\n")
+	sinfo = readsninfo(options.sampleinfo,phenotype=options.phenotype)
+
+	sys.stderr.write("[INFO] read matrix data\n")
+	data  = readmatrix(args[0],cutoff=cutoff,percent=percent,addtolog=addtolog,log2tr=log2tr)
+	
+	if options.dp:
+		sys.stderr.write("[INFO] to determine power\n")
+		down_matrix,anno = rddm(data.df.values,data.anno,selected=5000)
+		ret = nancorrmatrix_self_mp2(down_matrix,tmppath=tmppath,nprocessor=nprocessor,method=options.corrmethod)
+		sfnet = SFnet(anno,tmppath,power=power,signtype=signtype,minsize=minsize,threads=nprocessor,outdir=outdir,pcut=pcut,ncluster=ncluster)
+		sfnet.initCorr()
+		ret = sfnet.determine_power(selectsamples = 5000,nbins = 20)
+		return ret
+
+	sys.stderr.write("[INFO] do corr analysis\n")
+	ret = nancorrmatrix_self_mp2(data.df.values,tmppath=tmppath,nprocessor=nprocessor,method=options.corrmethod)
+	
+	sys.stderr.write("[INFO] SFnet analysis\n")
+	sfnet = SFnet(data.anno,tmppath,power=power,signtype=signtype,minsize=minsize,threads=nprocessor,outdir=outdir,pcut=pcut,ncluster=ncluster)
+	
+	sys.stderr.write("[INFO] init Corr\n")
+	sfnet.initCorr()
+
+	sys.stderr.write("[INFO] adjacency analysis\n")
+	sfnet.power_adjacency()
+
+	sys.stderr.write("[INFO] connectivity analysis\n")
+	sfnet.callconnectivity()
+
+	sys.stderr.write("[INFO] dissTOM analysis\n")
+	sfnet.dissTOM()
+	
+	sys.stderr.write("[INFO] do cluster\n")
+	sfnet.clustermodule()
+
+	sys.stderr.write("[INFO] output result\n")
+	ret = sfnet.outputmodule()
+	sfnet.close()
+	return ret
+
+if __name__ == "__main__":
+	start_time = time.time()
+	
+	monitor_controlC()
+	ret = main()
+	
+	costtime = time.time() - start_time
+	if 0 == ret:
+		sys.stderr.write("[INFO] Done. Total cost time: %.3fs\n"%costtime)
+		sys.exit(0)
+	elif ret == -1:
+		sys.stderr.write("[ERROR] incorrect number of arguments\n")
+	elif ret == 1:
+		sys.stderr.write("[ERROR]Task interrupt!\n")
+	sys.exit(1)

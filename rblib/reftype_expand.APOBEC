@@ -1,0 +1,11 @@
+# in ref.type
+idx is : 
+
+TCA	C	G	28
+TCA	C	T	44
+
+TCT	C	G	31
+TCT	C	T	47
+
+tCw -> tTw   w is a or T 
+tCw -> tGw   w is a or T 
