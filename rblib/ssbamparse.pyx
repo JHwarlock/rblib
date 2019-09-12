@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 import sys
-import commands
 import bamio
 import pysam
 # 4中 R，F , RF, FR
