@@ -17,7 +17,7 @@ import numpy as np
 mpl.rcParams.update({'font.size': 10}) 
 #mpl.rcParams['legend.fontsize'] = 9
 #mpl.style.use('ggplot')
-import mplconfig
+from rblib import mplconfig
 
 def gbplot_pie(fractions, #values for the wedges
 	labels, #labels for the wedges

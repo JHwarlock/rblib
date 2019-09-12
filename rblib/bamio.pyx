@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys
 import pysam
-import mutilstats
+from rblib import mutilstats
 import os
 
 def coverage_cal(mergedregionlen,send,qstart,qend,add=1):

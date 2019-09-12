@@ -13,7 +13,7 @@ import matplotlib.cm as cm
 from matplotlib import font_manager as fm
 from matplotlib_venn import venn2,venn3
 import itertools
-import mutilstats
+from rblib import mutilstats
 import scipy.cluster.hierarchy as sch
 from rklib import utils
 
@@ -35,8 +35,8 @@ from matplotlib.colors import LogNorm
 from scipy.cluster.vq import whiten
 #mpl.style.use('ggplot')
 
-import mplconfig
-from mplconfig import styles,color_grad,rgb2hex,makestyles
+from rblib import mplconfig
+from rblib.mplconfig import styles,color_grad,rgb2hex,makestyles
 
 def test_iter(num):
 	fig = plt.figure(dpi=300)
@@ -476,7 +476,7 @@ def plot_boxplotscatter(X,fig_prefix,xlabel,ylabel,xticks_labels,colors=None,yli
 	plt.savefig(fig_prefix+".png",format='png',dpi=300);plt.savefig(fig_prefix+".svg",format='svg',dpi=300);
 	plt.clf();plt.close()
 	return 0
-from plotx import retain_y,retain_xy
+from rblib.plotx import retain_y,retain_xy
 
 ##  statplot.CNVline(xdata,ydata,freqlables,11,"Chromsome %s"%(str(chrom)),11,sys.argv[2]+".chr%s"%(str(chrom)),[rawx_raw,],-0.5,0.5)
 def chrom_scatterinfo(xdata,ydata,freqlables,xlabel,ylabel,figprefix,ylimmin=None,ylimmax=None,xlimmin=None,xlimmax=None):
@@ -594,8 +594,8 @@ def plot_scatter_qipao(x,y,pvalue,status,figprefix,xlabel,ylabel,figsize=(8,6)):
 	ax.grid(True,ls='--')
 	fig.tight_layout()
 	plt.savefig(figprefix+".png",format='png',dpi=300);plt.savefig(figprefix+".svg",format='svg',dpi=300);
-	plt.clf();plt.close()
- 	return 0
+	plt.clf();plt.close();
+	return 0
 
 def adjacent_values(xmin,xmax, q1, q3):
 	upper_adjacent_value = q3 + (q3 - q1) * 1.5
@@ -1973,7 +1973,8 @@ def exprs_NUSE():
 	#是一种比RLE更为敏感 的质量检测手段。如果你在RLE图当中对某组芯片的质量表示怀疑，那当你使用NUSE图时，这种怀疑就很容易被确定下来。NUSE的计算其实也很简单，它是某芯片基因标准差相对于全组标准差的比值。我们期待全组芯片都是质量可靠的话，那么，它们的标准差会十分接近，于是它们的NUSE值就会都在1左右。然而，如果有实验芯片质量有问题的话，它就会严重的偏离1，进而影响其它芯片的NUSE值偏向相反的方向。当然，还有一种非常极端的情况，那就是大部分芯片都有质量问题，但是它们的标准差却比较接近，反而会显得没有质量问题的芯片的NUSE值会明显偏离1，所以我们必须结合RLE及NUSE两个图来得出正确的结论
 	return 0
 
-from itertools import izip
+#from itertools import izip
+izip = zip
 
 def show_values2(pc,markvalues,fmt="%.3f",fontsize=10,**kw):
 	pc.update_scalarmappable()

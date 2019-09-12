@@ -173,7 +173,7 @@ def do_enrich_core(siglist,totlist,hdb,method="qvalue",hstat={}):
 	#print henrich
 	return result_sort,henrich
 
-import statplot
+from rblib import statplot
 def enrich_plot(result,pcut,nameidx,oddsratioidx,pvalueidx,namesubidx=None,namesubsep=None,fig_prefix="XXX.enrich",xlabel="$Odds Ratio$",ylabel="-$log_{10}(probability)$"):
 	result_mark = []
 	result_others = []

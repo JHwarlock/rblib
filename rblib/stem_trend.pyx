@@ -6,9 +6,9 @@ import sys
 import numpy as np
 import itertools
 from scipy import misc
-from mutilstats import comb_replace
-from enrich import fdr_core
-import statplot
+from rblib.mutilstats import comb_replace
+from rblib.enrich import fdr_core
+from rblib import statplot
 from rklib.progress_bar import ProgressBar
 def exprs_profile(ntimes,c=1):
 	# c is default = 1
@@ -45,7 +45,7 @@ def exprs_profile(ntimes,c=1):
 	profileslables.append(zerolabel)
 	return np.asarray(profile_matrix_out),profileslables
 
-from gwaspls import kenstone
+from rblib.gwaspls import kenstone
 def merge_profile(profiles,num=50):
 	# matrix,  m  , and d cut
 	# use the corr 
@@ -149,7 +149,7 @@ def parse_edgeRdir(num,edgeRdir,prefix="Root.matrix.xls",subpre="cond_",starts=1
 			f.close()
 	return h
 
-import mutilstats
+from rblib import mutilstats
 from rklib.fmtprint import f2str
 from rklib import utils
 

@@ -2,7 +2,7 @@
 import sys
 import numpy as np
 import pysam
-import bamio
+from rblib import bamio
 import scipy as sp
 from scipy import stats
 import matplotlib
@@ -10,11 +10,11 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from matplotlib import font_manager as fm
-import statplot
+from rblib import statplot
 import matplotlib.cm as cm
-import ssbamparse
+from rblib import ssbamparse
 from  rklib.utils import us_sort
-from seqio import merge_region
+from rblib.seqio import merge_region
 
 def format_pos(a):
 	if a > 1000000:

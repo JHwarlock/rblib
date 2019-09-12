@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 import sys
-import seqio
+from rblib import seqio
 from rklib.utils import us_sort
-from defs import hgeneclass
-import bamio
+from rblib.defs import hgeneclass
+from rblib import bamio
 # 0-based [,)   return regions  1-based coor like  gff
 def refgene_parse_transcript(chrom,start,end,cds_start,cds_stop,exon_num,strand,exon_starts,exon_ends,exon_status):
 	exons = []

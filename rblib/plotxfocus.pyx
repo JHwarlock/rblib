@@ -13,7 +13,7 @@ import matplotlib.cm as cm
 from matplotlib import font_manager as fm
 from matplotlib_venn import venn2,venn3
 import itertools
-import mutilstats
+from rblib import mutilstats
 import scipy.cluster.hierarchy as sch
 
 
@@ -35,11 +35,11 @@ from matplotlib.colors import LogNorm
 from scipy.cluster.vq import whiten
 #mpl.style.use('ggplot')
 
-import mplconfig
-from mplconfig import styles,color_grad,rgb2hex,inscolor
-from statplot import clean_axis
+from rblib  import mplconfig
+from rblib.mplconfig import styles,color_grad,rgb2hex,inscolor
+from rblib.statplot import clean_axis
 import pandas as pd
-import traits
+from rblib import traits
 
 mpl.rcParams['axes.facecolor'] = u"#FFFFFF"
 ### to plot mutation profile in 

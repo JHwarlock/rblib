@@ -118,7 +118,7 @@ def check_data(X_SNPs):
 		If the memory is sufficient, we suggest you use the numpy.float64\n""")
 		sys.exit(1)
 
-import mutilstats
+from rblib import mutilstats
 def mds_ps(X_raw,nvs_output=10,norm=1):
 	"""
 	Here, a mutil demensional scale method was used to calculate the population structure.

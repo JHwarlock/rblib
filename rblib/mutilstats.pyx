@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from rklib import compress
+from rblib import mplconfig
 import os
 import numpy as np
 import scipy as sp
@@ -9,7 +10,6 @@ import sys
 import time
 import ctypes
 import itertools
-import mplconfig
 
 def check_vecnan(nparr):
 	idx = ~np.isnan(nparr)

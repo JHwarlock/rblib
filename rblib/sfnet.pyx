@@ -5,7 +5,7 @@ import pandas as pd
 import h5py
 from rblib.gwaspls import resampling2
 from scipy import stats
-import statplot
+from rblib import statplot
 import os
 # power call # default use 6, + or - need to be consider
 # Often choosing beta=6 works well but in general we use the “scale free topology criterion” described in Zhang and Horvath 2005.

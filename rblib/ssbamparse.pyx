@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 import sys
-import bamio
+from rblib import bamio
 import pysam
 # 4中 R，F , RF, FR
 import time

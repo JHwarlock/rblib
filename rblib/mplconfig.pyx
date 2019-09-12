@@ -25,7 +25,7 @@ mpl.rcParams['axes.titleweight'] = 'normal'
 mpl.rcParams['axes.labelcolor'] = u'#000000'
 mpl.rcParams['text.color'] = 'k'
 mpl.rcParams['lines.dash_joinstyle'] = 'round'
-mpl.rcParams['text.latex.unicode'] = False
+#mpl.rcParams['text.latex.unicode'] = False
 mpl.rcParams['path.simplify_threshold'] = 0.11111111111
 mpl.rcParams['ytick.labelsize'] = 'medium'
 mpl.rcParams['ps.papersize'] = 'letter'
@@ -161,7 +161,7 @@ def makestyles(a,n):
 		raise
 	ret = []
 	for i in range(n):
-		ret.append(gen.next())
+		ret.append(next(gen))
 	return ret
 
 def styles(num,colorgrad=None,defaultnum = 8):
@@ -188,9 +188,9 @@ def styles(num,colorgrad=None,defaultnum = 8):
 	ret_lines = []
 	ret_marker = []
 	for i in range(num):
-		ret_color.append(color_raw.next())
-		ret_lines.append(lines_raw.next())
-		ret_marker.append(marker_raw.next())
+		ret_color.append(next(color_raw))
+		ret_lines.append(next(lines_raw))
+		ret_marker.append(next(marker_raw))
 	return ret_color,ret_lines,ret_marker
 
 def inscolor(stringlist,colorgrad = "npg"):
@@ -225,19 +225,24 @@ def color_grad(num,colorgrad="npg"):
 def rgb2hex(rgbORrgba):
 	return matplotlib.colors.rgb2hex(rgbORrgba)
 
+def runtest():
+	from rblib import statplot
+	statplot.show_grad()
+	return 0
 if __name__ == "__main__":
 	#print color_grad(3)
 	colornames = __getallcolors()
 	import numpy as np
 	## plot hist norm
 	from rblib import statplot
+	"""
 	data = []
 	names = []
 	for i in range(5):
 		names.append("S%d"%(i+1))
 		data.append(np.random.randn(1000) + i*2.2)
 	statplot.hist_groups(data,names,"data","testplot_hist",alpha=0.8,normed=False,bins=10,rwidth=0.8,hist=True,figsize=(6,5),histtype="bar")
-
+	"""
 
 
 """

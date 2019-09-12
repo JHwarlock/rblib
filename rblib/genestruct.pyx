@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys
 from rklib.utils import us_sort
-import seqio
+from rblib import seqio
 
 """
 Contributors
@@ -336,7 +336,7 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
 		return strout
 
 
-from seqprocess import Key_obj
+from rblib.seqprocess import Key_obj
 
 ## use to parse UCSC refgene.txt
 def readrefgene(refgenefile): ## read refgene format
