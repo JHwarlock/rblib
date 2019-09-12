@@ -30,7 +30,7 @@ def gethits(read):
 def FR_discordant(read):
 	ret = 0
 	if read.is_read1:
-		if read.reference_id <> read.next_reference_id:
+		if read.reference_id != read.next_reference_id:
 			ret = 1
 		if read.is_reverse:
 			if read.template_length >=0: ret = 1
@@ -184,7 +184,9 @@ class Tabixobj(object):
 			self.dbfn = self.fn  + ".gz"
 			self.idx  = self.dbfn + ".tbi"
 		if 0 == self.checkidx():return 0
-		else: return 1
+		else:
+			sys.stderr.write("[ERROR] Fail to create Index file '%s'. Please check !!!\n"%self.idx)
+			return 1
 	def dbload(self):
 		if self.checkidx(): return 1
 		self.db = pysam.Tabixfile(self.dbfn)
@@ -226,7 +228,7 @@ if __name__ == "__main__":
 	samfile = pysam.Samfile( bamfile, "rb" )	
 	count = 0
 	for alignread in samfile:
-		print alignread.blocks
+		print(alignread.blocks)
 		count += 1
 		if count == 10:
 			break

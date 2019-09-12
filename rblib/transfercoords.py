@@ -17,7 +17,7 @@ protein  => cds
 def genome2exon(genomeleft,genomeright,region):# to exon or cds, a genomepos list
 	## ACTC - , is a InDel,  ACT is in the cds region, but C not in it, 0-based [a,b)
 	transleft,transright = 0,0
-	assert genomeleft <> genomeright
+	assert genomeleft != genomeright
 	#regionlength = 0
 	for start,end in region:
 		#regionlength += (end-start)
@@ -31,7 +31,7 @@ def genome2exon(genomeleft,genomeright,region):# to exon or cds, a genomepos lis
 			transright += end - start
 		else:
 			break # not break ,because of to get whole region length for reverse 
-	if transleft <> transright:
+	if transleft != transright:
 		return transleft,transright #,regionlength
 	else:
 		return None
@@ -65,10 +65,11 @@ if __name__  == "__main__":
 	#print exon2genome(transleft,transright,cds)	
 	"10043710        10044114"	
 	cds = []
-	f = file(sys.argv[1],"r")
+	f = open(sys.argv[1],"r")
 	for line in f:
 		cds.append(line.rstrip("\n").split("\t"))
 	genomeleft = 10043710
 	genomeright = 10044114
 	transleft,transright =  genome2exon(genomeleft,genomeright,cds)
-	print transleft,transright 
+	print(transleft,transright)
+

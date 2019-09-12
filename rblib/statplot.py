@@ -44,7 +44,7 @@ def test_iter(num):
 	y = 1
 	ax = fig.add_subplot(111)
 	ret_color,ret_lines,ret_marker = styles(num)
-	for i in xrange(num):
+	for i in range(num):
 		ax.plot([x,x+1,x+2,x+3,x+4],[y,y,y,y,y],color=ret_color[i],linestyle=ret_lines[i],marker=ret_marker[i],markeredgecolor=ret_color[i],markersize=12,alpha=0.8)
 		y += 1
 	plt.savefig("test_style.png",format='png',dpi=300)	
@@ -62,7 +62,7 @@ def plot_enrich(resultmark,resultothers,fig_prefix,xlabel,ylabel):
 	ret_color,ret_lines,ret_marker = styles(num)
 	ax = fig.add_subplot(111)
 	maxlim = 0
-	for i in xrange(num-1):
+	for i in range(num-1):
 		#ax.plot(resultmark[i][1],resultmark[i][2],ret_color[i]+ret_marker[i],label=resultmark[i][0],markeredgecolor=ret_color[i],markersize=8,alpha=0.7)
 		ax.plot(resultmark[i][1],resultmark[i][2],color=ret_color[i],linestyle='',marker=ret_marker[i],label=resultmark[i][0],markeredgecolor=ret_color[i],markersize=10,alpha=0.7)
 		if resultmark[i][2] > maxlim:
@@ -129,7 +129,7 @@ def group_scatter(xs,ys,groups,xlabel,ylabel,addline=None,fig_prefix="test",alph
 	ax = fig.add_subplot(111)
 	patchs = []
 	nstd = 2
-	for i in xrange(len(groups)):
+	for i in range(len(groups)):
 		group = groups[i]
 		x = xs[i]
 		y = ys[i]
@@ -166,7 +166,7 @@ def scatter2(x,y,xlabel,ylabel,addline=None,fig_prefix="test",alpha=0.3,ylog=0,x
 	ax = fig.add_subplot(111)
 	colors = styles(3)[0]
 	ax.scatter(x,y,marker=marker,linewidths=linewidths,color=colors[0],alpha=alpha) #,label=labels[0])
-	if addline <> None:
+	if addline is not None:
 		[x1,x2],[y1,y2] = addline
 		ax.plot([x1,x2],[y1,y2],color="gray",ls='--',lw=1.0) #ax.plot(xp,yp,color=colors[n-i-1],linestyle='--',lw=1.0)
 		#ax.set_xlim(x1,x2)
@@ -241,45 +241,45 @@ def venn_plot(datalist,setnames,fig_prefix="venn_plot",hplot=None,figsize=(5,4))
 	dirDetectCreate(fig_prefix+"_venn_list")
 	outdir = fig_prefix+"_venn_list"
 	if len(setnames) == 3:
-		f = file(outdir+"/"+setnames[0]+".specific.lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+".specific.lst.xls","w")
 		f.write("\n".join(datalist[0]-(datalist[1] | datalist[2] )))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[1]+".specific.lst.xls","w")
+		f = open(outdir+"/"+setnames[1]+".specific.lst.xls","w")
 		f.write("\n".join(datalist[1]-(datalist[0] | datalist[2] )))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[2]+".specific.lst.xls","w")
+		f = open(outdir+"/"+setnames[2]+".specific.lst.xls","w")
 		f.write("\n".join(datalist[2]-(datalist[0] | datalist[1] )))
 		f.write("\n")
 		f.close()
 		comb = datalist[0] & datalist[2] & datalist[1]
-		f = file(outdir+"/"+setnames[0]+"_and_"+setnames[1]+".lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+"_and_"+setnames[1]+".lst.xls","w")
 		f.write("\n".join(datalist[0] & datalist[1] - comb))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[1]+"_and_"+setnames[2]+".lst.xls","w")
+		f = open(outdir+"/"+setnames[1]+"_and_"+setnames[2]+".lst.xls","w")
 		f.write("\n".join(datalist[1] & datalist[2] - comb))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[0]+"_and_"+setnames[2]+".lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+"_and_"+setnames[2]+".lst.xls","w")
 		f.write("\n".join(datalist[0] & datalist[2] - comb))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[0]+"_and_"+setnames[1]+"_and_"+setnames[2]+".lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+"_and_"+setnames[1]+"_and_"+setnames[2]+".lst.xls","w")
 		f.write("\n".join(datalist[0] & datalist[2] & datalist[1] ))
 		f.write("\n")
 		f.close()
 	if len(setnames) == 2:
-		f = file(outdir+"/"+setnames[0]+".specific.lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+".specific.lst.xls","w")
 		f.write("\n".join(datalist[0]-datalist[1]))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[1]+".specific.lst.xls","w")
+		f = open(outdir+"/"+setnames[1]+".specific.lst.xls","w")
 		f.write("\n".join(datalist[1]-datalist[0] ))
 		f.write("\n")
 		f.close()
-		f = file(outdir+"/"+setnames[0]+"_and_"+setnames[1]+".lst.xls","w")
+		f = open(outdir+"/"+setnames[0]+"_and_"+setnames[1]+".lst.xls","w")
 		f.write("\n".join(datalist[0] & datalist[1]))
 		f.write("\n")
 		f.close()
@@ -307,7 +307,7 @@ def kdensity(var_arr,num = 200,fun='pdf',cdfstart=-np.inf):
 	if fun == 'cdf':
 		ynew = np.zeros(num)
 		ynew[0] = kden.integrate_box_1d(cdfstart,xnew[0])
-		for i in xrange(1,num):
+		for i in range(1,num):
 			ynew[i] = kden.integrate_box_1d(cdfstart,xnew[i])
 	else: ynew = kden(xnew)
 	return xnew,ynew
@@ -337,9 +337,9 @@ def plot_hmc_curve(X,Y,colors,classlabels,figname_prefix="out",scale=0):
 	step = 100
 	t = np.linspace(-np.pi, np.pi, num=step)
 	f = np.zeros((n,step))
-	for i in xrange(n):
+	for i in range(n):
 		f[i,:] = X[i,0]/np.sqrt(2)
-		for j in xrange(1,p):
+		for j in range(1,p):
 			if j%2 == 1:
 				f[i,:] += X[i,j]*np.sin(int((j+1)/2)*t)
 			else:
@@ -356,7 +356,7 @@ def plot_hmc_curve(X,Y,colors,classlabels,figname_prefix="out",scale=0):
 	for i in idx:
 		ax.plot(t,f[i,:],colors[i])
 	ax.legend(labels,loc=0)
-	for i in xrange(n):
+	for i in range(n):
 		ax.plot(t,f[i,:],colors[i])
 	ax.set_xlabel("$t(-\pi,\ \pi)$",fontstyle='italic')
 	ax.set_ylabel("$f(t)$",fontstyle='italic')
@@ -463,7 +463,7 @@ def plot_boxplotscatter(X,fig_prefix,xlabel,ylabel,xticks_labels,colors=None,yli
 	for flier in bp['fliers']:
 		flier.set(marker='o', color='#e7298a', alpha=0)
 	if scatter:
-		for i in xrange(len(X)):
+		for i in range(len(X)):
 			x = np.random.normal(i+1, 0.03, size=len(X[i]))
 			ax.plot(x, X[i], 'o',color=colors[i] ,alpha=0.3,markersize=markersize)
 	ax.set_xticklabels(xticks_labels,rotation=45,ha="right")
@@ -484,7 +484,7 @@ def chrom_scatterinfo(xdata,ydata,freqlables,xlabel,ylabel,figprefix,ylimmin=Non
 	ax1 = fig.add_subplot(111)
 	numberscatter = len(freqlables)
 	hcolor = mplconfig.inscolor(freqlables)
-	for i in xrange(len(freqlables)):
+	for i in range(len(freqlables)):
 		ax1.plot(xdata,ydata[i],color=hcolor[freqlables[i]],linestyle="-",lw=2.0,label=freqlables[i])
 	ax1.set_xlabel(xlabel)
 	if ylimmin and ylimmax:
@@ -533,7 +533,7 @@ def plotenrich_qipao(plotdatax,figprefix,xlabel,figsize=(8,6),aratio=1.0,color="
 	xx = 0
 	for i in plotdatax:
 		item,logpvalue,logqvalue,num,M = i
-		print item,logqvalue
+		print(item,logqvalue)
 		x.append(logqvalue)
 		xx += 1
 		y.append(xx)
@@ -574,8 +574,6 @@ def plot_scatter_qipao(x,y,pvalue,status,figprefix,xlabel,ylabel,figsize=(8,6)):
 	#print (pvaluetrans - minpvaluetrans) / (maxpvaluetrans - minpvaluetrans)
 	x = np.asarray(x)
 	y = np.asarray(y)
-	print x
-	print y
 	pvaluetransed = np.int64(4.5**((pvaluetrans - minpvaluetrans) / (maxpvaluetrans - minpvaluetrans) * 3))
 	#nx = np.asarray(x) + (np.random.rand(len(x))-0.5) * 0.05
 	#ny = np.asarray(y) + (np.random.rand(len(y))-0.5) * 0.05
@@ -626,19 +624,19 @@ def plot_dfboxplot(df,fig_prefix,xlabel,ylabel,outshow=False,colors=None,ylim=[]
 	fig = plt.figure(figsize=figsize,dpi=300) # 3,8
 	ax = fig.add_subplot(111)
 	slplot = []
-	for i in xrange(nlegends):
+	for i in range(nlegends):
 		x = []
-		for j in xrange(nxticklabels):
+		for j in range(nxticklabels):
 			tmpdata = df[ (df["xlabelticks"] == uniq_xticklabels[j]) & (df["group"] == uniq_legends[i])]["data"].values
 			x.append(tmpdata)
 		if not violin:
-			print i
+			print(i)
 			bp = ax.boxplot(x,widths=width,positions=xpos+width*i,showmeans=showmeans,meanline=showmeans,notch=False,showfliers=outshow)
 			## violinplot(data, pos, points=20, widths=0.3, showmeans=True, showextrema=True, showmedians=True)
 			plt.setp(bp['boxes'], color="black",linewidth=1.0); plt.setp(bp['whiskers'], color='black',linewidth=1.0); plt.setp(bp['medians'], color='black',linewidth=1.0) 
 			if outshow: plt.setp(bp['fliers'], color=colors[i], marker='o',markersize=6)
 			#box = bp['boxes']
-			for j in xrange(nxticklabels):
+			for j in range(nxticklabels):
 				if nlegends > 1: ploti = i
 				else: ploti = j
 				if showscatter:
@@ -654,7 +652,7 @@ def plot_dfboxplot(df,fig_prefix,xlabel,ylabel,outshow=False,colors=None,ylim=[]
 			slplot.append(sp)
 		else:
 			vp = ax.violinplot(x,xpos+width*i,widths=width,showmeans=False, showmedians=False,showextrema=False)
-			for j in xrange(nxticklabels):
+			for j in range(nxticklabels):
 				if nlegends > 1: ploti = i
 				else: ploti = j
 				pc = vp['bodies'][j]
@@ -709,7 +707,7 @@ def plot_boxplot(Xnp,fig_prefix,xlabel,ylabel,xticks_labels,outshow=1,colors=Non
 	
 	if colors == None:
 		colors = color_grad(n,cm.Paired) 
-	for i in xrange(n):
+	for i in range(n):
 		box = bp['boxes'][i]
 		boxX = box.get_xdata().tolist()
 		boxY = box.get_ydata().tolist()
@@ -741,7 +739,7 @@ def plot_Xscore(Xnp,classnums,uniqclassnum,uniqcolor,uniqmarker,uniqclasslabel,f
 	else:
 		sys.stderr.write("[ERROR] Dim '%d' plot failed\n"%dim)
 		return 1
-	for i in xrange(leng):
+	for i in range(leng):
 		tmpclassidx = np.array(classnums) == uniqclassnum[i]
 		tmplabel = uniqclasslabel[i]
 		tmpcolor = uniqcolor[i%(len(uniqcolor))]
@@ -791,8 +789,8 @@ def draw_lines(data,xlabels,legends,ylabel,fig_prefix,colors=None,markers=None,l
 		ret_marker= makestyles(markers,n)
 	fig = plt.figure(dpi=300,figsize=figsize)
 	ax = fig.add_subplot(111)
-	xloc = range(p)
-	for i in xrange(n):
+	xloc = list(range(p))
+	for i in range(n):
 		tmpdata = data[i,:]
 		ax.plot(xloc,tmpdata,ls=ret_lines[i],color=ret_color[i],label=legends[i])
 		#ax.plot(xloc,tmpdata,ls=ret_lines[i],marker=ret_marker[i],markerfacecolor=ret_color[i],markeredgecolor=ret_color[i],color=ret_color[i],label=legends[i])
@@ -800,7 +798,7 @@ def draw_lines(data,xlabels,legends,ylabel,fig_prefix,colors=None,markers=None,l
 	ax.set_ylabel(ylabel)
 	ax.set_xticklabels(xlabels,ha="right",rotation=rotation)
 	ax.set_xlim(-0.5,p-0.5)
-	ax.set_xticks(range(0,p))
+	ax.set_xticks(np.arange(0,p))
 	yrange = np.max(data) - np.min(data)
 	ax.set_ylim(np.min(data)-yrange*0.1,np.max(data)+yrange*0.1)
 	ax.legend(loc=0)
@@ -819,7 +817,7 @@ def plotline(Xvector,Ys,fig_prefix,xlabel,ylabel,colors,legends=None,title=None,
 		leng = len(legends)
 	else:
 		leng = 0
-	for i in xrange(n):
+	for i in range(n):
 		if i < leng:
 			tmplabel = legends[i]
 			ax.plot(Xvector,Ys[i,:],colors[i],label=tmplabel,linewidth=linewidth)
@@ -917,9 +915,9 @@ def barh_dict_class(hdata,fig_prefix,xlabel,ylabel,title = "",width=0.4,legends=
 	ax = fig.add_subplot(111)
 	linewidth = 0
 	alpha=0.8
-	ylocations = np.asarray(range(len(data)))+width*2
+	ylocations = np.arange(len(data))+width*2
 	rects = []
-	for i in xrange(len(plot_idx)):
+	for i in range(len(plot_idx)):
 		s,e = plot_idx[i]
 		rect = ax.barh(ylocations[s:e],np.asarray(data[s:e]),width,color=color_class[i],linewidth=linewidth,alpha=alpha,align='center')
 		rects.append(rect)
@@ -976,10 +974,10 @@ def bar_dict_class(hdata,fig_prefix,xlabel,ylabel,title = "",width=0.35,legends=
 		ax.set_yscale("log",nonposy='clip')
 	linewidth = 0
 	alpha=0.8
-	xlocations = np.asarray(range(len(data)))+width*2
+	xlocations = np.arange(len(data))+width*2
 	#rects = ax.bar(xlocations,np.asarray(data),width,color=plot_colors,linewidth=linewidth,alpha=alpha,align='center')
 	rects = []
-	for i in xrange(len(plot_idx)):
+	for i in range(len(plot_idx)):
 		s,e = plot_idx[i]
 		rect = ax.bar(xlocations[s:e],np.asarray(data[s:e]),width,color=color_class[i],linewidth=linewidth,alpha=alpha,align='center')
 		rects.append(rect)
@@ -1029,7 +1027,7 @@ def lineraworder(data,xticklabels,fig_prefix,xlabel,ylabel,title = "",width=0.4,
 	linewidth = 0; alpha=1.0
 	if not linecolor:
 		linecolor = styles(len(data))[0]
-	xlocations = np.asarray(range(len(data)))+width*2
+	xlocations = np.arange(len(data))+width*2
 	ax.plot(xlocations,data,ls=ls,marker=marker,markerfacecolor=linecolor,markeredgecolor=linecolor,color=linecolor)
 	ax.set_xticks(xlocations);ax.set_ylabel(ylabel); ax.set_xlabel(xlabel);
 	ax.set_xlim(0,xlocations[-1]+width*2);fig.tight_layout();
@@ -1046,7 +1044,7 @@ def lineplot(data,labels,fig_prefix,xlabel,ylabel,title = "",width=0.4,fmt="%.2f
 	n,p = data.shape
 	linecolors,lses,markers = styles(p)
 	assert p >=2
-	for i in xrange(1,p):
+	for i in range(1,p):
 		ax.plot(data[:,0],data[:,i],ls=lses[i],marker=markers[i],markerfacecolor=linecolors[i],markeredgecolor=linecolors[i],color=linecolors[i],label=labels[i])
 	ax.set_ylabel(ylabel); ax.set_xlabel(xlabel);
 	ax.legend(loc=0,numpoints=1) # ax.legend(labels,loc=0,numpoints=1)
@@ -1064,7 +1062,7 @@ def barlineraworder(data,xticklabels,fig_prefix,xlabel,ylabel,title = "",width=0
 	linewidth = 0; alpha=1.0
 	if not colors:
 		colors = styles(len(data))[0]
-	xlocations = np.asarray(range(len(data)))+width*2
+	xlocations = np.arange(len(data))+width*2
 	rects = ax.bar(xlocations,np.asarray(data),width,color=colors,linewidth=linewidth,alpha=alpha,align='center')
 	idxtmp = 0
 	for rect in rects:
@@ -1118,7 +1116,7 @@ def bar_dict(hdata,fig_prefix,xlabel,ylabel,title = "",width=0.4,legends=[],colo
 	alpha=1.0
 	if not colors:
 		colors = cm.Accent(np.linspace(0, 1, len(data)))
-	xlocations = np.asarray(range(len(data)))+width*2
+	xlocations = np.arange(len(data))+width*2
 	rects = ax.bar(xlocations,np.asarray(data),width,color=colors,linewidth=linewidth,alpha=alpha,align='center')
 	idxtmp = 0
 	for rect in rects:
@@ -1192,7 +1190,7 @@ def cluster_stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title=""
 	linewidth = 0
 	alpha=0.8
 	def plot_line_h(ax,rects):
-		for i in xrange(len(rects)-1):
+		for i in range(len(rects)-1):
 			rk1 = rects[i]
 			rk2 = rects[i+1]
 			x1 = rk1.get_x()+rk1.get_width()
@@ -1201,7 +1199,7 @@ def cluster_stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title=""
 			y2 = rk2.get_y()
 			ax.plot([x1,x2],[y1,y2],'k-',linewidth=0.4)
 		return 0
-	for i in xrange(n):
+	for i in range(n):
 		if i:
 			cumtmp = cumtmp + np.asarray(tmp[i-1,:])[0]
 			rects = stackvAX.barh(ind,np.asarray(tmp[i,:])[0],width,color=colors[i],linewidth=linewidth,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
@@ -1261,7 +1259,7 @@ def stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title="",width=0
 	linewidth = 0
 	alpha=1.0
 	def plot_line_h(ax,rects):
-		for i in xrange(len(rects)-1):
+		for i in range(len(rects)-1):
 			rk1 = rects[i]
 			rk2 = rects[i+1]
 			x1 = rk1.get_x()+rk1.get_width()
@@ -1271,7 +1269,7 @@ def stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title="",width=0
 			ax.plot([x1,x2],[y1,y2],'k-',linewidth=0.4)
 		return 0
 	def plot_line_v(ax,rects):
-		for i in xrange(len(rects)-1):
+		for i in range(len(rects)-1):
 			rk1 = rects[i]
 			rk2 = rects[i+1]
 			x1 = rk1.get_y()+ rk1.get_height()
@@ -1279,7 +1277,7 @@ def stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title="",width=0
 			x2 = rk2.get_y()+rk2.get_height()
 			y2 = rk2.get_x()
 			ax.plot([y1,y2],[x1,x2],'k-',linewidth=0.4)
-	for i in xrange(n):
+	for i in range(n):
 		if i:
 			cumtmp = cumtmp + np.asarray(tmp[i-1,:])[0]
 			if orientation == "vertical":
@@ -1361,7 +1359,7 @@ def bar_group(data,group_label,xticklabel,xlabel,ylabel,colors=None,fig_prefix="
 		112     return color_class
 		"""
 		colors = color_grad(num_groups,colorgrad="Dark2")
-	for i in xrange(num_groups):
+	for i in range(num_groups):
 		rect=ax.bar(xlocations+width*i, np.asarray(data)[i,:], width=width,linewidth=0,color=colors[i],ecolor=colors[i],alpha=0.6,label=group_label[i])
 		rects.append(rect)
 	for rk in rects:
@@ -1377,7 +1375,7 @@ def bar_group(data,group_label,xticklabel,xlabel,ylabel,colors=None,fig_prefix="
 	if ylog:
 		ax.set_yscale("log")
 	ax.grid(True)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	fig.tight_layout()
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
 	plt.savefig(fig_prefix+".svg",format='svg',dpi=300)
@@ -1393,14 +1391,14 @@ def err_line_group(data,error,group_label,xticklabel,xlabel,ylabel,colors,fig_pr
 	xlocations = np.arange(p) + 1
 	ret_color,ret_lines,ret_marker = styles(p)
 
-	for i in xrange(num_groups):
+	for i in range(num_groups):
 		ax.errorbar(xlocations,data[i,:],yerr=error[i,:],marker=ret_marker[i],ms=8,ls='dotted',color=ret_color[i],capsize=5,alpha=0.6,label=group_label[i])
 	ax.legend(group_label,loc=0)
 	ax.set_xticks(xlocations)
 	ax.set_xticklabels(xticklabel)
 	ax.set_ylabel(ylabel)
 	ax.set_xlabel(xlabel)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	
 	xregion = (xlocations[-1] - xlocations[0]) * 0.1
 	if xlim == None:
@@ -1416,6 +1414,34 @@ def err_line_group(data,error,group_label,xticklabel,xlabel,ylabel,colors,fig_pr
 	plt.close()
 	return 0
 
+def bargrouperr(data,yerror=None,xlabel=None,ylabel=None,colors = None,fig_prefix="test",title=None,width=None,figsize=(5,4)):
+	groupnames = data.columns
+	xticklabels = data.index
+	num_groups = len(groupnames)
+	if colors is None: colors = styles(num_groups)[0]
+	if width is None: width = 0.95/num_groups
+	fig = plt.figure(dpi=300,figsize=figsize)
+	ax = fig.add_subplot(111)
+	xlocations = np.arange(len(xticklabels))
+	for i in range(num_groups):
+		groupname = groupnames[i]
+		if yerror is None:
+			ax.bar(xlocations+width*i, data.loc[:,groupname].tolist(),width=width,linewidth=1.0,facecolor=colors[i],edgecolor='black',alpha=0.6,label=groupnames[i])
+		else:
+			ax.bar(xlocations+width*i, data.loc[:,groupname].tolist(),yerr=yerror.loc[:,groupname].tolist(),capsize=10,error_kw={'elinewidth':1.0,'capthick':1.0},width=width,linewidth=1.0,facecolor=colors[i],edgecolor='black',ecolor=colors[i],alpha=0.6,label=groupnames[i])
+	ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),ncol=6,borderaxespad=0, fancybox=True)
+	ax.set_xticks(xlocations+width/2*(num_groups-1))
+	ax.set_xticklabels(xticklabels)
+	if xlabel is not None:ax.set_xlabel(xlabel)
+	if ylabel is not None:ax.set_ylabel(ylabel)
+	if title is not None: ax.set_title(title)
+	ax.set_xlim(0-width*0.75,xlocations[-1]+(num_groups-1+0.75)*width)
+	fig.tight_layout()
+	#ax.grid(True,axis="y")
+	fig.tight_layout(rect = [0,0,1,0.9])
+	plt.savefig(fig_prefix+".png",format='png',dpi=300); plt.savefig(fig_prefix+".svg",format='svg',dpi=300); plt.clf();plt.close()
+	return 0
+
 def bargroup(data,group_label,xticklabel,xlabel,ylabel,colors=None,fig_prefix="test",title=None,width=None): # group * xticks 
 	num_groups,p = data.shape
 	if colors == None:
@@ -1426,7 +1452,7 @@ def bargroup(data,group_label,xticklabel,xlabel,ylabel,colors=None,fig_prefix="t
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
 	xlocations = np.arange(p)
-	for i in xrange(num_groups):
+	for i in range(num_groups):
 		ax.bar(xlocations+width*i, data[i,:],width=width,linewidth=0,color=colors[i],ecolor=colors[i],alpha=0.6,label=group_label[i])
 	ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),ncol=6,borderaxespad=0, fancybox=True)
 	ax.set_xticks(xlocations+width/2*(num_groups-1))
@@ -1434,7 +1460,7 @@ def bargroup(data,group_label,xticklabel,xlabel,ylabel,colors=None,fig_prefix="t
 	ax.set_ylabel(ylabel)
 	ax.set_xlabel(xlabel)
 	ax.set_xlim(-1,xlocations[-1]+1)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	fig.tight_layout()
 	ax.grid(True,axis="y")
 	fig.tight_layout(rect = [0,0,1,0.9])
@@ -1452,7 +1478,7 @@ def err_bar_group(data,error,group_label,xticklabel,xlabel,ylabel,colors=None,fi
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
 	xlocations = np.arange(p)
-	for i in xrange(num_groups):
+	for i in range(num_groups):
 		ax.bar(xlocations+width*i, data[i,:],yerr=error[i,:], width=width,linewidth=0,color=colors[i],ecolor=colors[i],alpha=0.6,label=group_label[i])# capsize=5
 	#ax.legend(group_label,loc=0)
 	ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),ncol=6,borderaxespad=0)
@@ -1460,7 +1486,7 @@ def err_bar_group(data,error,group_label,xticklabel,xlabel,ylabel,colors=None,fi
 	ax.set_xticklabels(xticklabel)
 	ax.set_ylabel(ylabel)
 	ax.set_xlabel(xlabel,rotation=rotation)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	if ylog: ax.set_yscale("log",nonposy='clip')
 	fig.tight_layout()
 	ax.grid(True)
@@ -1482,20 +1508,20 @@ def err_bar(data,error,xlabel,ylabel,fig_prefix,title=None,mark_sig=None,mark_ra
 	
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
-	xlocations = np.asarray(range(len(data)))+width
+	xlocations = np.arange(len(data))+width
 	ax.bar(xlocations, data, yerr=error, width=width,linewidth=0.5,ecolor='r',capsize=5,color=colors,alpha=0.5)
 	ax.set_xticks(xlocations+width/2)
 	ax.set_xticklabels(xlabel)
 	ax.set_ylabel(ylabel)
 	ax.set_xlim(0, xlocations[-1]+width*2)
-	if title <> None:ax.set_title(title)
-	if mark_sig <> None:
+	if title is not None:ax.set_title(title)
+	if mark_sig is not None:
 		xlocations = xlocations+width/2
 		ybin = np.max(np.asarray(data)+np.asarray(error))
 		step = ybin/20
 		offset = ybin/40
 		assert len(mark_sig) == len(mark_range)
-		for i in xrange(len(mark_range)):
+		for i in range(len(mark_range)):
 			mark_r = mark_range[i]
 			sig_string = mark_sig[i]
 			xbin = np.asarray(mark_r)
@@ -1520,10 +1546,10 @@ def trendsiglabel(Xvec,Yvec,meansdata,totmean,color,xticklabel,fig_prefix="trend
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
 	#ax.plot(Xvec,Yvec,color+'^-',markeredgecolor='None',markersize = 12)
-	for i in xrange(ngenes_tot):
+	for i in range(ngenes_tot):
 		#print i
 		ax.plot(Xvec,totmean[i,:],'g-',lw=0.5,alpha=0.3)
-	for i in xrange(ngenes_sig):
+	for i in range(ngenes_sig):
 		ax.plot(Xvec,meansdata[i,:],'b-',lw=0.5,alpha=0.3)
 	ax.plot(Xvec,Yvec,color+'^-',markeredgecolor=color,markersize = 5)
 	ax.set_xticks(np.arange(num))
@@ -1548,9 +1574,9 @@ def twofactor_diff_plot(Xmeanarr,Xstdarr,xticklabel,fig_prefix="Sigplot",title=N
 	assert num == Xstdarr.shape[-1] == len(xticklabel)
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
-	xlocations = np.asarray(range(num))+width
+	xlocations = np.arange(num)+width
 	n,p = Xmeanarr.shape
-	for i in xrange(n):
+	for i in range(n):
 		ax.errorbar(xlocations, Xmeanarr[i,:], yerr=Xstdarr[i,:],fmt=fmts[i],ecolor=ecolors[i],markeredgecolor=ecolors[i])
 	if labels:
 		ax.legend(labels,loc=0,numpoints=1)
@@ -1560,7 +1586,7 @@ def twofactor_diff_plot(Xmeanarr,Xstdarr,xticklabel,fig_prefix="Sigplot",title=N
 	if xlabel: ax.set_xlabel(xlabel)
 	ax.set_xlim(0, xlocations[-1]+width*2)
 	#ax.set_ylim(bottom=ylimmin)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	ax.grid(True)
 	fig.tight_layout()
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
@@ -1574,14 +1600,14 @@ def onefactor_diff_plot(Xmeanarr,Xstdarr,xticklabel,fig_prefix="Sigplot",title=N
 	assert num == len(Xstdarr) == len(xticklabel)
 	fig = plt.figure(dpi=300)
 	ax = fig.add_subplot(111)
-	xlocations = np.asarray(range(len(Xmeanarr)))+width
+	xlocations = np.arange(len(Xmeanarr))+width
 	ax.errorbar(xlocations, Xmeanarr, yerr=Xstdarr,fmt='o-',ecolor='r')
 	ax.set_xticks(xlocations)
 	ax.set_xticklabels(xticklabel)
 	ax.set_ylabel(ylabel)
 	if xlabel: ax.set_xlabel(xlabel)
 	ax.set_xlim(0, xlocations[-1]+width*2)
-	if title <> None:ax.set_title(title)
+	if title is not None:ax.set_title(title)
 	ax.grid(True)
 	fig.tight_layout()
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
@@ -1673,7 +1699,7 @@ def baohedu_plot(genes,reads,samples,fig_prefix,xlabel="number of reads",ylabel=
 	ret_color,ret_lines,ret_marker = styles(n1)
 	fig = plt.figure(figsize=(8,6),dpi=300)
 	ax = fig.add_subplot(111)
-	for i in xrange(n1):
+	for i in range(n1):
 		x = reads[i,:]
 		y = genes[i,:]
 		ax.plot(x,y,color=ret_color[i],linestyle=ret_lines[i],marker=ret_marker[i],markeredgecolor=ret_color[i],markersize = 4,alpha=0.7,label=samples[i])
@@ -1707,7 +1733,7 @@ def plotyy(Xvector,Y1np,Y2np,fig_prefix,xlabel,ylabel1,ylabel2,title=None,figsiz
 		n2,p2 = Y2np.shape
 	except ValueError:
 		n2 = 1
-	for i in xrange(n1):
+	for i in range(n1):
 		if n1 == 1:
 			ax1.plot(Xvector,Y1np, 'b-')
 			break
@@ -1721,7 +1747,7 @@ def plotyy(Xvector,Y1np,Y2np,fig_prefix,xlabel,ylabel1,ylabel2,title=None,figsiz
 	for tl in ax1.get_yticklabels():
 		tl.set_color('b')
 	ax2 = ax1.twinx()
-	for i in xrange(n2):
+	for i in range(n2):
 		if n2 == 1:
 			ax2.plot(Xvector,Y2np, 'r-')
 			break
@@ -1779,16 +1805,16 @@ def density_plt(Xarr,colors,legendlabel,figname_prefix="density",xlabel=None,yla
 	ax = fig.add_subplot(111)
 	n = len(Xarr)
 	assert len(colors) == len(legendlabel)
-	for i in xrange(n):
+	for i in range(n):
 		dat = np.asarray(Xarr[i])
-		xp,yp = kdensity(dat[dat <> exclude],num = 400,fun=fun)
+		xp,yp = kdensity(dat[dat != exclude],num = 400,fun=fun)
 		ax.plot(xp,yp,colors[i],label=legendlabel[i],markeredgecolor='None')
 		if fill:
 			ax.fill_between(xp,yp,y2=0,color=colors[i],alpha=0.2)
 	ax.legend(loc=0,numpoints=1)
-	if xliml <> None:
+	if xliml is not None:
 		ax.set_xlim(left = xliml)
-	if xlimr <> None:
+	if xlimr is not None:
 		ax.set_xlim(right = xlimr)
 	#if xliml and xlimr:
 	#	print "get"
@@ -1818,17 +1844,17 @@ def exprs_density(Xnp,colors,classlabels,figname_prefix="out",xlabel=None,ylabel
 	for i in idx:
 		dat = np.asarray(Xnp[i,:])
 		if fun == "cdf":
-			xp,yp = kdensity(dat[dat <> exclude],fun="cdf")
+			xp,yp = kdensity(dat[dat != exclude],fun="cdf")
 		elif fun == "pdf":
-			xp,yp = kdensity(dat[dat <> exclude],fun="pdf")	
+			xp,yp = kdensity(dat[dat != exclude],fun="pdf")	
 		ax.plot(xp,yp,colors[i])
 	ax.legend(labels,loc=0)
-	for i in xrange(n):
+	for i in range(n):
 		dat = np.asarray(Xnp[i,:])
 		if fun == "cdf":
-			xp,yp = kdensity(dat[dat <> exclude],fun="cdf")
+			xp,yp = kdensity(dat[dat != exclude],fun="cdf")
 		elif fun == "pdf":
-			xp,yp = kdensity(dat[dat <> exclude],fun="pdf")
+			xp,yp = kdensity(dat[dat != exclude],fun="pdf")
 		ax.plot(xp,yp,colors[i])
 		#print xp
 		#print yp
@@ -1860,7 +1886,7 @@ def hist_groups(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,colo
 	else:ylabel = "Frequency"
 	fig = plt.figure(dpi=300,figsize=figsize)
 	ax = fig.add_subplot(111)
-	for i in xrange(n):
+	for i in range(n):
 		xp,yp = kdensity(data[i],fun="pdf")
 		if hist:
 			ax.hist(data[i],histtype=histtype,rwidth=rwidth,linewidth=linewidth,bins=bins, alpha=alpha,normed=normed,color=colors[n-i-1])
@@ -1891,7 +1917,7 @@ def hist_groups2(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,col
 	ax = fig.add_subplot(111)
 	miny = 1
 	maxy = 0
-	for i in xrange(n):
+	for i in range(n):
 		xp,yp = kdensity(data[i],fun="pdf")
 		miny = min(miny,np.min(yp))
 		maxy = max(maxy,np.max(yp))
@@ -1953,8 +1979,8 @@ def show_values2(pc,markvalues,fmt="%.3f",fontsize=10,**kw):
 	pc.update_scalarmappable()
 	newmarkvalues = []
 	n,p = markvalues.shape
-	#for i in xrange(n-1,-1,-1):
-	for i in xrange(n):
+	#for i in range(n-1,-1,-1):
+	for i in range(n):
 		newmarkvalues.extend(markvalues[i,:].tolist())
 	ax = pc.axes
 	count = 0
@@ -2055,7 +2081,7 @@ def pie_plot(sizes,labels,fig_prefix="pie_plot",autopct='%1.1f%%',colors=None,ex
 	patches, texts = ax5.pie(sizes,explode,colors=colors, shadow=shadow, startangle=startangle,radius=radius)
 	tmplabels = []
 	total = sum(sizes)
-	for i in xrange(len(labels)):
+	for i in range(len(labels)):
 		lable = labels[i]
 		size = float(sizes[i])/total*100
 		#print lable+"("+ autopct+")"
@@ -2131,11 +2157,11 @@ def cluster_pcolor_dist(Xdist,samplenames,annos,fig_prefix="test_cluster_pcolor"
 	lfsm = 8
 	if len(samplenames) > 20:
 		lfsm  = int(len(samplenames) * 1.0 * 4/40); lfsm = np.min([lfsm,8])
-	print n,p
+	print(n,p)
 	rfsm = 8
 	if len(annos) > 20:
 		rfsm = int(len(annos) * 1.0 * 4/40); rfsm = np.min([rfsm,8])
-	print lfsm,rfsm 
+	print(lfsm,rfsm)
 	fig = plt.figure(figsize=figsize) #  width, height, rfsm,lfsm ## 14,10
 	
 	heatmapGS = gridspec.GridSpec(2,2,wspace=0.0,hspace=0.0,width_ratios=[0.14,p*1.0/n],height_ratios=[0.14,1])
@@ -2166,8 +2192,8 @@ def cluster_pcolor_dist(Xdist,samplenames,annos,fig_prefix="test_cluster_pcolor"
 	#heatmapAX.grid(visible=False)
 	if markvalues is not None:
 		show_values2(axi,markertmp,markfmt,fontsize=markfontsize)
-	print row_denD['leaves']
-	print samplenames
+	print(row_denD['leaves'])
+	print(samplenames)
 	if plotxlabel:
 		if not nosample:
 			t_samplenames = [samplenames[i] for i in row_denD['leaves']]
@@ -2294,10 +2320,10 @@ def highfreq_mutmap(topgenesmuted,mut_stack,samplenames,annonames,fig_prefix="te
 	sys.stderr.write("[INFO] plot size is %dX%d\n"%(leftx,rightx))
 	width_ratios = [0.07,0.115,1];height_ratios=[0.15,1]
 	samples_l = 3; genes_l = 2;
-	if type(samplecolors) <> type(None): 
+	if samplecolors is not None: 
 		samples_l += 1
 		width_ratios = [0.07,0.115,0.05,1]
-	if type(genecolors) <> type(None): 
+	if genecolors  is not None: 
 		genes_l = 3
 		height_ratios = [0.1,0.05,1]
 	heatmapGS = gridspec.GridSpec(samples_l,genes_l,wspace=0.0,hspace=0.0,width_ratios=height_ratios,height_ratios=width_ratios)
@@ -2327,7 +2353,7 @@ def highfreq_mutmap(topgenesmuted,mut_stack,samplenames,annonames,fig_prefix="te
 	#mut_stackT = mut_stack.T
 	if not nosample: mut_stack = mut_stack[col_denD['leaves'],:]
 	ind = np.arange(stackn)
-	for i in xrange(stackp):
+	for i in range(stackp):
 		if i:
 			cumtmp = cumtmp + np.asarray(mut_stack[:,i-1].T)[0]
 			rects = stackvAX.bar(ind,np.asarray(mut_stack[:,i].T)[0],0.6,color=stackcolors[i],linewidth=0,alpha=0.7,align='center',bottom=cumtmp,label=stacklegends[i])
@@ -2339,7 +2365,7 @@ def highfreq_mutmap(topgenesmuted,mut_stack,samplenames,annonames,fig_prefix="te
 	stackvAX.set_ylabel("Mutations")
 	stackvAX.set_xlim(-0.5,stackn-0.5)
 	heatmapAX = fig.add_subplot(heatmapGS[samples_l-1,genes_l-1])
-	if samplecolors <> None:
+	if samplecolors is not  None:
 		if not nosample:
 			tmpxxx = []
 			for x in col_denD['leaves']:
@@ -2349,7 +2375,7 @@ def highfreq_mutmap(topgenesmuted,mut_stack,samplenames,annonames,fig_prefix="te
 		col_cbAX = fig.add_subplot(heatmapGS[2,genes_l-1])
 		col_axi = col_cbAX.imshow([list(samplecolors)],interpolation='nearest',aspect='auto',origin='lower')
 		clean_axis(col_cbAX)
-	if genecolors <> None:
+	if genecolors is not None:
 		if not nogene:
 			genecolors   = genecolors[row_denD['leaves']]
 		row_cbAX = fig.add_subplot(heatmapGS[samples_l-1,1])
@@ -2432,7 +2458,7 @@ def plot_contest(data,ynames,xlabel=None,ylabel=None,fig_prefix="plot_ContEst"):
 	data = [[mean,low,up],...]
 	"""
 	meandat = []; lowdat = []; updat = []; rangedat = []; num = len(data); yoffset = []
-	for i in xrange(num):
+	for i in range(num):
 		meandat.append(data[i][0]); lowdat.append(data[i][1]); updat.append(data[i][2]); yoffset.append(i+1); rangedat.append(data[i][2]-data[i][1])
 	if num < 25: heightsize = 6
 	else: heightsize = int(num * 1.0 * 6/30)
@@ -2458,8 +2484,8 @@ def plot_contest(data,ynames,xlabel=None,ylabel=None,fig_prefix="plot_ContEst"):
 	ax.grid(True)
 	#ax.set_ylim(0,num+1)
 	#ax.set_xlim(0,np.max(updat)+1)
-	if xlabel <> None: ax.set_xlabel(xlabel)	
-	if ylabel <> None: ax.set_ylabel(ylabel)
+	if xlabel is not None: ax.set_xlabel(xlabel)	
+	if ylabel is not None: ax.set_ylabel(ylabel)
 	fig.tight_layout()
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
 	plt.savefig(fig_prefix+".svg",format='svg',dpi=300)
@@ -2498,7 +2524,8 @@ def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",
 	leftx = min(int(32700/300.0),leftx)
 	rightx = min(int(32700/300.0),rightx)
 	sys.stderr.write("[INFO] plot size is %dX%d\n"%(leftx,rightx))
-	fig = plt.figure(figsize=(rightx,leftx))
+	# rightx, leftx
+	fig = plt.figure(figsize=(14,8))
 	samples_l = 2; genes_l = 2;
 	width_ratios = [0.15,1];height_ratios=[0.15,1]
 	if samplecolors is not None: 
@@ -2556,7 +2583,7 @@ def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",
 			samplecolors = tmpxxx[:]
 			del tmpxxx
 		col_cbAX = fig.add_subplot(heatmapGS[1,genes_l-1])
-		print samplecolors
+		print(samplecolors)
 		if not usepcolor:
 			col_axi = col_cbAX.imshow([list(samplecolors)],interpolation='nearest',aspect='auto',origin='lower',cmap=samplecolormap)
 		else:
@@ -2570,7 +2597,7 @@ def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",
 			genecolors   = np.asarray(genecolors)[row_denD['leaves']]
 			#print genecolors
 		row_cbAX = fig.add_subplot(heatmapGS[samples_l-1,2])
-		print np.asarray([genecolors.tolist(),]).T 
+		print(np.asarray([genecolors.tolist(),]).T)
 		row_axi = row_cbAX.imshow(np.asarray([genecolors.tolist(),]).T,interpolation='nearest',aspect='auto',origin='lower',alpha=0.6)
 		clean_axis(row_cbAX)
 	tickoffset = 0
@@ -2630,8 +2657,8 @@ def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",
 	fig.subplots_adjust(left = 0)
 	#plt.savefig(fig_prefix+".tiff",format='tiff',additional_artists=fig,bbox_inches="tight",dpi=300)
 	plt.savefig(fig_prefix+".png",format='png',additional_artists=fig,bbox_inches="tight",dpi=300)
-	if n * p < 200000:
-		plt.savefig(fig_prefix+".svg",format='svg',additional_artists=fig,bbox_inches="tight",dpi=300)
+	#if n * p < 200000:
+	plt.savefig(fig_prefix+".svg",format='svg',additional_artists=fig,bbox_inches="tight",dpi=300)
 	plt.clf()
 	plt.close()
 	try: 
@@ -2646,7 +2673,7 @@ def loess_testplot(x,y,ynp,labels=[]):
 	assert len(labels) == n
 	ret_color,ret_lines,ret_marker = styles(n)
 	ax.plot(x,y,"ko")
-	#for i in xrange(n)
+	#for i in range(n)
 
 def show_grad():
 	colors = mplconfig.__getallcolors()
@@ -2659,12 +2686,12 @@ def show_grad():
 	y = 0
 	for color in colors:
 		retcolors = styles(10,color)[0]
-		for i in xrange(10):
+		for i in range(10):
 			ax.plot([x[i],],y,'o',color=retcolors[i],markersize=12)
 		y += 1
 	ax.set_xlim(-1,10)
 	ax.set_ylim(-1,y+1)
-	ax.set_yticks(range(0,y))
+	ax.set_yticks(np.arange(0,y))
 	ax.set_yticklabels(colors)
 	fig.tight_layout()
 	plt.savefig("colorgrad_show.png",format='png',dpi=300)
@@ -2682,7 +2709,7 @@ def __test():
 	uniqclasslables= ['r3','k2','g4']
 	colors = [color[i] for i in Y]
 	classlabels = [uniqclasslables[i] for i in Y]
-	print plot_hmc_curve(X,Y,colors,classlabels,"test_hmc_curve")
+	print(plot_hmc_curve(X,Y,colors,classlabels,"test_hmc_curve"))
 
 def __testplot():
 	##绘制kde估计的概率密度  测试 kdensity
@@ -2712,7 +2739,7 @@ def __testplot():
 	plt.setp(bp['boxes'], color='black')
 	plt.setp(bp['whiskers'], color='black')
 	plt.setp(bp['fliers'], color='red', marker='+')
-	for i in xrange(2):
+	for i in range(2):
 		box = bp['boxes'][i]
 		boxX = box.get_xdata().tolist()
 		boxY = box.get_ydata().tolist()

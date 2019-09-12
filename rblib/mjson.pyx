@@ -4,10 +4,10 @@ import simplejson as json
 
 def iterdict(h,iterm_b="",hn={}):
 	for iterm in h:
-		print iterm_b
-		print iterm
+		print(iterm_b)
+		print(iterm)
 		termout = iterm_b + "=>" + iterm
-		if type(h[iterm]) == dict:
+		if type(h[iterm]) is dict:
 			iterdict(h[iterm],iterm_b=termout,hn=hn)
 		else:
 			value = h[iterm]
@@ -39,11 +39,12 @@ a = {
 print iterdict(a)
 """
 if __name__ == "__main__":
-	infile = file(sys.argv[1],"r")
+	infile = open(sys.argv[1],"r")
 
 	obj = json.load(infile)
 	hn = iterdict(obj)
 	for key in hn:
 		if "days_to_death" in key:
-			print key+ "\t" +hn[key]
+			print(key+ "\t" +hn[key])
+	infile.close()
 

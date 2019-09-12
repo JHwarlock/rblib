@@ -24,7 +24,7 @@ Karyocolors = {
 
 def parseregion(x,y,color,region):
 	ret = []
-	for i in xrange(len(region)-1):
+	for i in range(len(region)-1):
 		start = region[i]
 		end = region[i+1]
 		if x <= end and y >= start:# overlap
@@ -33,7 +33,7 @@ def parseregion(x,y,color,region):
 	return ret
 
 def parsekaryo(karyo_filename):
-	f = file(karyo_filename,"r")
+	f = open(karyo_filename,"r")
 	target = ["chr"+str(x) for x in range(1,23) + ["X","Y"]] # ,"M","MT"]]
 	karyo_dict = {}
 	center_dict = {}
@@ -66,7 +66,7 @@ class Plotchrom(object):
 		self.karyo_dict = karyo_dict
 		self.ystart = ystart # record the first chrom 's position on yaxis
 		self.plotorders = {}
-		for i in xrange(len(orders)):
+		for i in range(len(orders)):
 			self.plotorders[orders[i]] = i 
 
 	def __get_chrom_len(self,chromosome="chr1"): # chromosome: "chr1"
@@ -279,31 +279,31 @@ class Plotchrom(object):
 		circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius = self.get_parameter(chrom)
 		self.__plotwhole(semic_radius,1.0,4.0,circle_end1,ystart+semic_radius,coff=1,bins=40,color="red",alpha=1.0)
 		self.plot_frame(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius)
-		self.save("chr3",fmt="both")
+		self.save(chrom,fmt="both")
 		return 0
 	def plot_script4halfcolorbin(self,chrom="chr3",coff=1):
 		circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius = self.get_parameter(chrom)
 		self.plot_halfcolorbin(self.karyo_dict,Karyocolors,chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius)
 		self.plot_frame(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius)
-		self.save("chr3",fmt="both")
+		self.save(chrom,fmt="both")
 		return 0
 	def plot_script4karyo(self,chrom="chr3"):
 		circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius  = self.get_parameter(chrom)
 		self.plot_karyo(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius)
 		self.plot_frame(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius)
-		self.save("chr3",fmt="both")
+		self.save(chrom,fmt="both")
 		return 0
 	def plot_script4halfcolorbin2(self,chrom="chr3",coff=1):
 		circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere = self.get_parameter2(chrom)
 		self.plot_halfcolorbin2(self.karyo_dict,Karyocolors,chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere)
 		self.plot_frame2(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere)
-		self.save("chr3",fmt="both")
+		self.save(chrom,fmt="both")
 		return 0
 	def plot_script4karyo2(self,chrom="chr3"):
 		circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere = self.get_parameter2(chrom)
 		self.plot_karyo2(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere)
 		self.plot_frame2(chrom,circle_start1,circle_end1,circle_start2,circle_end2,ystart,semic_radius,centromere)
-		self.save("chr3",fmt="both")
+		self.save(chrom,fmt="both")
 		return 0
 
 if __name__ == '__main__':

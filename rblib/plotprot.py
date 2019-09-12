@@ -122,7 +122,7 @@ class ProtPlot(object):
 	def plotwhole(self,protlen):
 		self.__plotarrow(0,0,self.window,0.0,regiontype="None",ec_color="black")
 		self.bands = protlen/self.window
-		print self.bands
+		print(self.bands)
 		self.ax.set_xlim(-50,self.window+50)
 		return 0
 

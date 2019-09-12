@@ -16,7 +16,7 @@ def matrixformat(matrix):
 	data = []
 	n,p = matrix.shape
 	assert n == p
-	for i in xrange(n):
+	for i in range(n):
 		data.append(matrix[i,0:i+1].tolist())
 	return data
 
@@ -31,7 +31,7 @@ def dist2nw(names = ['Alpha', 'Beta', 'Gamma', 'Delta'],distmatrix = [[0], [1, 0
 	elif method == "upgma": # Tree(rooted=True)
 		tree = constructor.upgma(dm)
 	#Phylo.draw_ascii(tree)
-	#print tree
+	#print(tree)
 	Phylo.write([tree,],fn,"newick")
 	"""
 	newick
@@ -45,16 +45,16 @@ def dist2nw(names = ['Alpha', 'Beta', 'Gamma', 'Delta'],distmatrix = [[0], [1, 0
 from ete3 import Tree, TreeStyle, NodeStyle, PhyloTree, CircleFace, TextFace, RectFace, random_color
 
 def nw2dist(fn="test_evol.newick",treeflag=0,format=1):
-	c = file(fn).read().strip()
+	c = open(fn).read().strip()
 	t = Tree(c,format)
 	if treeflag: return t
 	else:
 		nodes = [n.name for n in t]
 		n_nodes = len(nodes)
 		distmat = np.zeros((n_nodes,n_nodes))
-		for i in xrange(n_nodes-1):
+		for i in range(n_nodes-1):
 			ni = nodes[i]
-			for j in xrange(i+1,n_nodes):
+			for j in range(i+1,n_nodes):
 				nj = nodes[j]
 				d = t.get_distance(ni,nj)
 				distmat[j,i] = distmat[i,j] = d
@@ -64,9 +64,9 @@ def nw2dist(fn="test_evol.newick",treeflag=0,format=1):
 	# t.set_outgroup("B")
 
 def	dist2file(names,distmat,fn):
-	fo = file(fn,"w")
+	fo = open(fn,"w")
 	fo.write("#\t%s\n"%("\t".join(names)))
-	for i in xrange(len(names)):
+	for i in range(len(names)):
 		fo.write("%s\t%s\n"%(names[i],"\t".join(map(str,distmat[i].tolist()))))
 	fo.close()
 	return 0

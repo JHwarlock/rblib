@@ -41,9 +41,9 @@ def sm_define(data,winsize=10,m="min"):
 		fun = np.min
 	else:
 		fun = None
-	for i in xrange(lendata-winsize):
+	for i in range(lendata-winsize):
 		newdata[i] = fun(data[i:i+winsize])
-	for i in xrange(lendata-1,lendata-1-winsize,-1):
+	for i in range(lendata-1,lendata-1-winsize,-1):
 		newdata[i] = fun(data[i+1-winsize:i+1])
 	return newdata
 

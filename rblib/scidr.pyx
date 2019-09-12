@@ -44,7 +44,7 @@ if __name__ == "__main__":
 	np.random.seed(0)
 	X = np.random.random((10,5))
 	X[0:5,:] += 5
-	print X
+	print(X)
 	#print doPCA(X,whiten = True)
 	
 	### MDS varaince 

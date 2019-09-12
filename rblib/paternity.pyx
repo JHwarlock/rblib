@@ -12,14 +12,14 @@ def ssr_poly(n): # mutil-alleles # allele is 0,1,2,3,4    genotype =  (0,0) (1,2
 
 def generate_individual_geno(alleles,cumprob,ploidy=2):
 	geno = []
-	for i in xrange(ploidy):
+	for i in range(ploidy):
 		idx = np.sum(np.random.random() > cumprob)
 		geno.append(alleles[idx])
 	return "|".join(map(str,geno))
 
 def population_geno_persite(snnum,alleles,cumprob,ploidy=2):
 	popgeno = []
-	for i in xrange(snnum):
+	for i in range(snnum):
 		popgeno.append(generate_individual_geno(alleles,cumprob,ploidy))
 	return popgeno
 
@@ -27,7 +27,7 @@ def population_geno_persite(snnum,alleles,cumprob,ploidy=2):
 def population_genos(numbersites,snnum,ploidy=2,ssr=4):
 	numsites = []
 	probs = []
-	for i in xrange(numbersites):
+	for i in range(numbersites):
 		alleles,prob,cumprob = ssr_poly(ssr)
 		popgeno = population_geno_persite(snnum,alleles,cumprob,ploidy)
 		numsites.append(popgeno)
@@ -49,7 +49,7 @@ def compare_ind(parent_vec,child_vec,prob,cutCPI=10000,cutCPE=0.9999):
 	counts = 0
 	probs = []
 	pis = []
-	for i in xrange(leng):
+	for i in range(leng):
 		geno_parent = set(parent_vec[i].split("|"))
 		geno_child  = set(child_vec[i].split("|"))
 		#if "-" in geno_parent or "-" in geno_child:continue
@@ -81,11 +81,11 @@ def make_childs(parents,num_childs = 500):
 	records = []
 	childs = []
 	num_sites,snnum = parents.shape
-	for i in xrange(num_childs):
+	for i in range(num_childs):
 		p1,p2 = generate_twoidx(snnum)
 		records.append(set([p1,p2]))
 		tmpchild = []
-		for j in xrange(num_sites):
+		for j in range(num_sites):
 			## random to select, no linked
 			geno1 = parents[j,p1].split("|")
 			geno2 = parents[j,p2].split("|")
@@ -137,9 +137,9 @@ def get_relationship(parents,childs,records,probs,cutCPE=0.9999,cutCPI=10000):
 	assert nsites1 == nsites2
 	current = np.zeros((2,2))
 	count = 0
-	for i in xrange(numparents):
+	for i in range(numparents):
 		parent1 = parents[:,i]
-		for j in xrange(numchilds):
+		for j in range(numchilds):
 			child1 = childs[:,j]
 			yesorno = compare_ind(parent1,child1,probs,cutCPI=cutCPI,cutCPE=cutCPE)
 			current[int(i in records[j]),yesorno] += 1
@@ -195,7 +195,7 @@ ssrtypes = [2,3,4,5,6]
 for num_sitesx in num_sites:
 	for ssrtype in ssrtypes:
 		PEtmp = []
-		for i in xrange(500):
+		for i in range(500):
 			parents,probs = make_parents(numbersites = num_sitesx,snnum = 2,ssr=ssrtype)
 			PEtmp.append(combine_PE(probs))
 		print str(num_sitesx) + "\t" + str(ssrtype) + "\t" + "\t".join(map(str,PEtmp))

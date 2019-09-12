@@ -17,13 +17,15 @@ class CNVproc(object):
 		"""
 		retploidy = 0.0
 		retainlen = self.totseglen
-		for i in xrange(self.numsegments):
+		for i in range(self.numsegments):
 			tmpploidy = self.segments[i][idx]
 			if tloss < tmpploidy < tgain: continue
 			if tmpploidy > tgain: tmpploidy = 3.0
 			else:
 				tmpploidy = 1.0
 			segmentlen = self.segments[i][2] - self.segments[i][1] + 1.0
+			#print segmentlen
+			#print segmentlen/self.totseglen
 			retploidy += tmpploidy * (segmentlen/self.totseglen)
 			retainlen -= segmentlen
 		retploidy += ploidy * (retainlen/self.totseglen)
@@ -47,9 +49,9 @@ class CNVproc(object):
 
 
 if __name__ == "__main__":
-	print "[INFO] TEST: ..."
+	print("[INFO] TEST: ...")
 	segments = [["chr1",1,1000,-1.0,-1.0,1.0],["chr2",1,3000,-1.0,-1.0,3.0]]
 	cnvproc = CNVproc(segments,totseglen=8000)
-	print cnvproc.wploidy()
-	print cnvproc.wgii(chrlen={"chr1":2000,"chr2":6000},numchrs=2.0)
+	print(cnvproc.wploidy())
+	print(cnvproc.wgii(chrlen={"chr1":2000,"chr2":6000},numchrs=2.0))
 	

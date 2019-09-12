@@ -28,6 +28,6 @@ if __name__ == "__main__":
 	Y = data["low"]
 	X = data[["age","lwt","smoke","ht","ui","ftv"]]
 	rslt = logisticregress(Y,X)
-	print rslt.llr_pvalue
-	print rslt.params
-	print rslt.pvalues
+	print(rslt.llr_pvalue)
+	print(rslt.params)
+	print(rslt.pvalues)

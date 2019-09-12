@@ -9,7 +9,7 @@ class POSIDX(object):
 	def __init__(self,filein):
 		self.filein = filein
 		self.fidx   = self.filein+".idx"
-		self.fpin   = file(self.filein,"r")
+		self.fpin   = open(self.filein,"r")
 		self.fpidx  = None
 		self.hidx   = {}
 		self.binsize = 0
@@ -20,7 +20,7 @@ class POSIDX(object):
 		#except:
 		#	return 1
 		try:
-			self.fpidx = file(self.fidx,"r")
+			self.fpidx = open(self.fidx,"r")
 		except:return 1
 		self.fpidx.seek(0)
 		header = self.fpidx.next().rstrip("\n")
@@ -55,7 +55,7 @@ class POSIDX(object):
 		f_mt = info.st_mtime
 		f_ct = info.st_ctime
 		#self.hidx["header"] = [name,binsize,fsizetmp,f_ct,f_mt]
-		self.fpidx = file(self.fidx,"w")
+		self.fpidx = open(self.fidx,"w")
 		self.fpidx.write("\t".join([name,str(binsize),str(int(fsizetmp)),str(int(f_ct)),str(int(f_mt))])+"\n")
 		self.fpin.seek(0)
 		lines_c = 0
@@ -75,7 +75,7 @@ class POSIDX(object):
 				bintmp = int(pos)/binsize
 				bintmp1 = int(pos1)/binsize
 			except:
-				print arr
+				print(arr)
 				continue
 			if chrom in self.hidx:
 				if bintmp not in self.hidx[chrom]:
@@ -84,7 +84,7 @@ class POSIDX(object):
 				else:
 					self.hidx[chrom][bintmp][1] = fcurrent
 			#		print fcurrent
-				if bintmp <> bintmp1:
+				if bintmp != bintmp1:
 					if bintmp1 not in self.hidx[chrom]:
 						self.hidx[chrom][bintmp1] = [fcurrent,fcurrent]
 					else:
@@ -93,7 +93,7 @@ class POSIDX(object):
 				sys.stderr.write("[INFO] Build for %s\n"%chrom)
 				self.hidx[chrom] = {}
 				self.hidx[chrom][bintmp] = [fcurrent,fcurrent]
-				if bintmp1 <> bintmp:
+				if bintmp1 != bintmp:
 					self.hidx[chrom][bintmp1] = [fcurrent,fcurrent]
 		self.fpin.seek(0)
 		for chrom in self.hidx:
@@ -102,7 +102,7 @@ class POSIDX(object):
 				self.fpidx.write("\t".join(map(str,out))+"\n")
 		self.fpidx.close()
 		self.hidx["header"] = [name,binsize,fsizetmp,f_ct,f_mt]
-		print self.hidx["header"]
+		print(self.hidx["header"])
 		#self.hidx.close()
 		sys.stderr.write("[INFO] IDX Build Done.\n")
 		return 0
@@ -116,7 +116,7 @@ class POSIDX(object):
 		#self.hidx = s.open(self.fidx)
 		#print self.hidx["header"]
 		#self.binsize = self.hidx["header"][1]
-		self.fpidx = file(self.fidx,"r")
+		self.fpidx = open(self.fidx,"r")
 		for line in self.fpidx:
 			if line.startswith("#"):
 				name,binsize,fsize,ct,mt = line.rstrip("\n").split("\t")
@@ -136,7 +136,7 @@ class POSIDX(object):
 		send_t = send / self.binsize
 		filestart = np.inf
 		fileend = 0 
-		for bintmp in xrange(sstart_t,send_t+1):
+		for bintmp in range(sstart_t,send_t+1):
 			#print "bintmp",bintmp
 			if bintmp in self.hidx[chrom]:
 			#	print "into file idx"

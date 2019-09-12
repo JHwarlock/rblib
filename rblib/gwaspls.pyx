@@ -30,7 +30,7 @@ def resampling1(wvector,numselect):
 	procum = np.cumsum(pro)
 	randseq = np.random.rand(numselect,1)
 	Index = []
-	for i in xrange(numselect):
+	for i in range(numselect):
 		temp = np.random.rand()<procum
 		temp = list(temp)
 		Index.append(temp.index(True))
@@ -70,7 +70,7 @@ def resampling2(wvector,numselect):
 		procum = np.cumsum(pro)
 		return pro,procum
 
-	for i in xrange(numselect-1):
+	for i in range(numselect-1):
 		temp = np.random.rand()<procum
 		temp = list(temp)
 		ind = temp.index(True)
@@ -149,7 +149,7 @@ def mds_ps(X_raw,nvs_output=10,norm=1):
 		mutilstats.normalize(X_SNPs)
 	#print X_SNPs
 	dist = np.asmatrix(np.zeros((nx,nx)))
-	for i in xrange(nx):
+	for i in range(nx):
 		temp = X_SNPs - X_SNPs[i,:]
 		temp = np.power(temp,2)
 		dist[:,i] = np.power(np.sum(temp,axis=1),0.5)
@@ -165,7 +165,7 @@ def mds_ps(X_raw,nvs_output=10,norm=1):
 	v = v[:,idx]
 	
 	precent = np.cumsum(w)/np.sum(w) * 100
-	print precent
+	print(precent)
 	mds_output = mdsoutput()
 	mds_output.p = precent[0:nvs_output]
 	mds_output.w = w[0:nvs_output]
@@ -229,9 +229,9 @@ def pca(X_SNPs,nvs_output=10,norm=1):
 	nvs_output = min(nvs_output,len(eigvalue))
 	
 	eigvalue = eigvalue[idx]
-	print eigvalue
+	print(eigvalue)
 	eigvec = eigvec[:,idx]
-	print eigvec
+	print(eigvec)
 	percent = np.cumsum(eigvalue)/np.sum(eigvalue) * 100
 	eigvecselect = np.asmatrix(eigvec[:,0:nvs_output])
 	scoreselect= X * eigvecselect
@@ -282,7 +282,7 @@ def kenstone(X,Y,k,method="raw"):
 	if method == "pca":
 		npca = 0
 		pca_ret = pca(X,n-1)
-		for i in xrange(len(pca_ret.expvars)):
+		for i in range(len(pca_ret.expvars)):
 			if pca_ret.expvars[i] > 99:
 				npca = i
 				break
@@ -303,7 +303,7 @@ def kenstone(X,Y,k,method="raw"):
 	model.append(np.int(Xmm[tmpidx,0]))
 	Xmm = np.delete(Xmm,tmpidx,axis=0)
 
-	for i in xrange(k-2):
+	for i in range(k-2):
 		tmpidx=np.argmax(np.min(fastdist(Xmm[:,1:],Xm[model,:]),axis=0),axis=1)[0,0]
 		#print fastdist(Xmm[:,1:],Xm[model,:])
 		#print np.min(fastdist(Xmm[:,1:],Xm[model,:]),axis=0)
@@ -345,7 +345,7 @@ def plsgwas2(X_SNPs,Y,nlvs=10):
 	LoadY = np.asmatrix(np.zeros((dy,nlvs)));
 	statW = np.asmatrix(np.zeros((dx,nlvs)));
 	V = np.asmatrix(np.zeros((dx,nlvs)));
-	for i in xrange(nlvs):
+	for i in range(nlvs):
 		ri,si,ci = np.linalg.svd(Cov,full_matrices=True)
 		ri = ri[:,0]; si = si[0]; ci=ci[0,:];
 		ti = X_SNPs*ri;
@@ -356,8 +356,8 @@ def plsgwas2(X_SNPs,Y,nlvs=10):
 		LoadY[:,i] = np.asmatrix(si*(ci.transpose())/normti)
 		statW[:,i] = np.asmatrix(ri / normti)
 		#vi = LoadX[:,i];
-		for rep in xrange(2):
-			for j in xrange(i):
+		for rep in range(2):
+			for j in range(i):
 				vj = V[:,j]
 				temp = vj.transpose()*vi
 				vi = vi - (temp[0,0])*vj
@@ -447,7 +447,7 @@ def getVIP(result,Y):
 	
 	p,nlvs = result.W.shape
 	corrlist = []
-	for i in xrange(nlvs):
+	for i in range(nlvs):
 		corrlist.append(np.corrcoef(result.scoreX[:,i].transpose(),Y.transpose())[0][1]**2)
 	corrlist = np.asmatrix(corrlist,dtype=result.scoreX.dtype)
 	corrlist = corrlist.transpose()
@@ -485,7 +485,7 @@ def VIPtest(X_SNPs,Y,fh_per,nlvs=10,ntimes=1000):
 	#fh_vip.write(struct.pack(structtype,*temp))
 	#print "Statics:"
 	#print VIPmat
-	for i in xrange(ntimes):
+	for i in range(ntimes):
 		ind = randomsort(len(Yt))
 		Yt = Yt[ind,:]
 		result = plsgwas(X_SNPs,Yt,nlvs)
@@ -508,19 +508,19 @@ def BETAtest(X_SNPs,Y,BETA,fh_beta,fh_per,nlvs=10,ntimes=1000):
 	dy = Yt.shape[-1]
 	dx = X_SNPs.shape[-1]
 	structtype = str(dx)+'d'
-	for j in xrange(dy):
+	for j in range(dy):
 		temp = BETA[:,j].transpose().tolist()[0]
 		fh_beta.write(struct.pack(structtype,*temp))
-	print 'BETA:'
-	print BETA
+	print('BETA:')
+	print(BETA)
 	fh_beta.write(struct.pack(structtype,*temp))
-	for i in xrange(ntimes):
+	for i in range(ntimes):
 		ind = randomsort(n)
 		Yt = Yt[ind,:]
 		BETA_per = plsgwas2(X_SNPs,Yt,nlvs)
-		print 'BETA_per\t'+str(i+1)
-		print BETA_per
-		for j in xrange(dy):
+		print('BETA_per\t'+str(i+1))
+		print(BETA_per)
+		for j in range(dy):
 			temp = BETA_per[:,j].transpose().tolist()[0]
 			fh_per.write(struct.pack(structtype,*temp))
 	return 0
@@ -538,7 +538,7 @@ def MCVIPtest(X_SNPs,Y,fh_vip,fh_per,nlvs=10,ntimes=1000,nsel=200):
 		sys.exit(1)
 	p = X_SNPs.shape[1]
 	#h = np.zeros((p,1))
-	for i in xrange(ntimes):
+	for i in range(ntimes):
 		X0 = X_SNPs.copy()
 		Y0 = Y.copy()
 		ind = randomsort(len(Y0))
@@ -546,7 +546,7 @@ def MCVIPtest(X_SNPs,Y,fh_vip,fh_per,nlvs=10,ntimes=1000,nsel=200):
 		X0 = X0[ind[1:nsel+1],:]
 		result = plsgwas(X0,Y0,nlvs)
 		Vipmat = getVIP(result,Y0)
-		for j in xrange(p):
+		for j in range(p):
 			fh_vip.write(struct.pack('d',Vipmat[j,0]))
 		ind = randomsort(len(Y0))
 		Y0 = Y0[ind,:]
@@ -554,7 +554,7 @@ def MCVIPtest(X_SNPs,Y,fh_vip,fh_per,nlvs=10,ntimes=1000,nsel=200):
 		Viptemp = getVIP(result,Y0)
 		t1 = time.time()
 		#print "ok"
-		for j in xrange(p):
+		for j in range(p):
 			fh_per.write(struct.pack('d',Viptemp[j,0]))
 		#print time.time()-t1
 	return 0
@@ -578,8 +578,8 @@ def rbfnorm2(X,Xt):
 	n0 = X.shape[0]
 	nx = Xt.shape[0]
 	RBFnorm2 = np.zeros((nx,n0));
-	for i in xrange(nx):
-		for j in xrange(n0):
+	for i in range(nx):
+		for j in range(n0):
 			RBFnorm2[i,j] = np.linalg.norm(Xt[i,:]-X[j,:])**2
 	return RBFnorm2
 
@@ -625,14 +625,14 @@ def bic_kmeans(X,maxk=None):
 		maxk = int(np.sqrt(n))
 	xy = whiten(X)
 	assert maxk+1>2
-	for numk in xrange(2,maxk+1):
+	for numk in range(2,maxk+1):
 		#variance_total = np.sum((xy - np.mean(xy,axis=0))**2) / (n-numk)
 		#print variance_total
 		#res, idx = kmeans2(xy,numk,minit='points')
 		res, idx = kmeans2(xy,numk)
 		LDtot = 0
 		others = numk+numk*p / 2 * np.log(n)
-		for i in xrange(numk):
+		for i in range(numk):
 			Rn = np.sum(idx==i)
 			if Rn <= 1:continue
 			#logRn = np.log(Rn)
@@ -640,7 +640,7 @@ def bic_kmeans(X,maxk=None):
 			LDn = -Rn/2.0 * np.log(2*np.pi) - Rn * p /2.0 *np.log(variance) -(Rn-numk)/2.0 +Rn *np.log(Rn) -Rn *np.log(n)
 			LDtot += LDn
 		bicvalue = LDtot - others
-		print numk,bicvalue,LDtot,others
+		print(numk,bicvalue,LDtot,others)
 		#print idx
 	return None
 
@@ -768,7 +768,7 @@ def plsmcuve(X,Y,nlvs=10,ratio=0.5,bootstrap_num=200):
 	nx,px = X.shape
 	IND = np.random.rand(bootstrap_num,nx) <= ratio
 	BETA = np.asmatrix(np.zeros((px,bootstrap_num)))
-	for i in xrange(bootstrap_num):
+	for i in range(bootstrap_num):
 		betatmp = plsgwas2(X[IND[i,:],:],Y[IND[i,:],:],nlvs)
 		BETA[:,i] = betatmp[:,0]
 	betamean = np.mean(BETA,axis=1)
@@ -780,7 +780,7 @@ def plsmcvip(X,Y,nlvs=10,ratio=0.5,bootstrap_num=200):
 	nx,px = X.shape
 	IND = np.random.rand(bootstrap_num,nx) <= ratio
 	VIPs = np.asmatrix(np.zeros((px,bootstrap_num)))
-	for i in xrange(bootstrap_num):
+	for i in range(bootstrap_num):
 		result = plsgwas(X[IND[i,:],:],Y[IND[i,:],:],nlvs)
 		VIPtmp = getVIP(result,Y[IND[i,:],:])
 		#print np.sum(np.power(VIPtmp,2))
@@ -859,14 +859,14 @@ def plscv(X0,Y0,nlvs = 10,nfold=4,method='quantificat'):
 	Yfortest = Ycv.copy()
 	Ycv = np.float64(Ycv)
 	block_size = int(len_seq/nfold)
-	for i in xrange(nfold):
+	for i in range(nfold):
 		l = i+1
 		if l == nfold:
-			train = range(0,block_size*(l-1))
-			validation = range(block_size*(l-1),len_seq)
+			train = list(range(0,block_size*(l-1)))
+			validation = list(range(block_size*(l-1),len_seq))
 		else:
-			train = range(0,block_size*(l-1))+range(block_size*l,len_seq)
-			validation = range(block_size*(l-1),block_size*l)
+			train = list(range(0,block_size*(l-1)))+list(range(block_size*l,len_seq))
+			validation = list(range(block_size*(l-1),block_size*l))
 		Xtraintemp = Xcv[train,:]
 		
 		Xtraintempmean = centring(Xtraintemp)
@@ -913,14 +913,14 @@ def lssvmcv(X,Y,nfold=4,gamma=1,method='quantificat',kernel_type='rbf',parameter
 	len_seq = len(Ycv)
 	Yfortest = Ycv.copy()
 	block_size = int(len_seq/nfold)
-	for i in xrange(nfold):
+	for i in range(nfold):
 		l = i+1
 		if l == nfold:
-			train = range(0,block_size*(l-1))
-			validation = range(block_size*(l-1),len_seq)
+			train = list(range(0,block_size*(l-1)))
+			validation = list(range(block_size*(l-1),len_seq))
 		else:
-			train = range(0,block_size*(l-1))+range(block_size*l,len_seq)
-			validation = range(block_size*(l-1),block_size*l)
+			train = list(range(0,block_size*(l-1)))+list(range(block_size*l,len_seq))
+			validation = list(range(block_size*(l-1),block_size*l))
 		Xtraintemp = Xcv[train,:]
 		Ytraintemp = Ycv[train,:]
 		Xtesttemp = Xcv[validation,:]
@@ -969,8 +969,8 @@ if __name__=='__main__':
 	x[500:,:]=x2
 	result=mds_ps(x,3)
 	print 'ok'
-	fh = file('test_mds','w')
-	for i in xrange(1000):
+	fh = open('test_mds','w')
+	for i in range(1000):
 		fh.write(str(result.v[i,0])+'\t'+str(result.v[i,1])+'\n')
 	X = np.matrix([[1,2,3,4],[3,4,5,7],[19,11,12,14]],dtype=np.float64)
 	Y = np.matrix([[5,11,2],[2,3,5]],dtype = np.float64)

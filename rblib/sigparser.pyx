@@ -14,11 +14,11 @@ from  Bio.Seq import Seq
 class Signature(object):
 	def __init__(self,strand=0):
 		if strand:
-			f = file(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types.strands","r")
+			f = open(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types.strands","r")
 			self.signumber = 192
 			self.mutlabel = ["A>C","A>G","A>T","C>A","C>G","C>T","G>A","G>C","G>T","T>A","T>C","T>G"]
 		else:
-			f = file(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types","r")
+			f = open(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types","r")
 			self.signumber = 96
 			self.mutlabel = ["C>A/G>T","C>G/G>C","C>T/G>A","T>A/A>T","T>C/A>G","T>G/A>C"]
 
@@ -114,7 +114,7 @@ class Signature(object):
 
 	def getmutation_pattern_maf(self,fmaf): # do without the bed file, filter by user self
 		mutmatrix = np.zeros(self.signumber)
-		fmaf = file(sys.argv[1],"r")
+		fmaf = open(sys.argv[1],"r")
 		for line in fmaf:
 			if line.startswith("#") or line.startswith("Hugo_Symbol"):continue
 			arr = line.rstrip("\n").split("\t")
@@ -180,7 +180,7 @@ class Signature(object):
 	
 	def plotreconstruction_err(self,X,figprefix="NMF_Reconstruction_Error",minnum=1,maxnum=10,init=None, solver='cd', tol=0.0001, max_iter=200, random_state=None, alpha=0.0, l1_ratio=0.0, verbose=0, shuffle=False, nls_max_iter=2000, sparseness=None, beta=1, eta=0.1):
 		ret = np.zeros(maxnum-minnum+1)
-		for i in xrange(minnum,maxnum+1):
+		for i in range(minnum,maxnum+1):
 			nmf = NMF(n_components=i)
 			sdist = nmf.fit_transform(X)
 			vdist = nmf.components_
@@ -209,8 +209,8 @@ class Signature(object):
 		n,p = data.shape
 		datasum = np.sum(data,axis=1)
 		datanorm = np.zeros((n,p))
-		for i in xrange(n):
-			for j in xrange(len(self.mutlabel)): ## 
+		for i in range(n):
+			for j in range(len(self.mutlabel)): ## 
 				datanorm[i,16*j:16*(j+1)]= data[i,16*j:16*(j+1)]/datasum[i]
 		datanorm[np.isnan(datanorm)] = 0.0
 		return datanorm
@@ -228,15 +228,15 @@ class Signature(object):
 		fig = plt.figure(figsize=(p/6,tmpheightsize),dpi=300)
 		datasum = np.sum(data,axis=1)
 		maxdat = maxdat/np.max(datasum)	
-		for i in xrange(n):
-			for j in xrange(len(self.mutlabel)): #
+		for i in range(n):
+			for j in range(len(self.mutlabel)): #
 				ax = fig.add_subplot(n,len(self.mutlabel),i*len(self.mutlabel)+j+1)
 				xlocations = np.arange(16)
 				ax.bar(xlocations, data[i,16*j:16*(j+1)]/datasum[i],width=width,linewidth=0,color=ret_colors[j],ecolor=ret_colors[j],alpha=0.6)
 				ax.plot((0,16),(1.0/self.signumber,1.0/self.signumber),'r--')
 				ax.set_ylim(ymax=maxdat)
 				if i == 0:ax.set_title(self.mutlabel[j]) ### "%.2f%%"%np.sum(data[i,16*j:16*(j+1)])/datasum[i])
-				if j<>0:
+				if j != 0:
 					self.__clean_y(ax)
 				else:
 					ax.set_ylabel(gnames[i])
@@ -259,7 +259,7 @@ class Signature(object):
 
 def sampleinfo(fn):
 	#sn	group	filenamepath	
-	f = file(fn,"r")
+	f = open(fn,"r")
 	hsn = {}
 	hgn = {}
 	snarr = []
@@ -307,7 +307,7 @@ if __name__ == "__main__":
 		signature.getbed(sys.argv[2])
 		if usesn:
 			sntotmutmatrix = np.zeros((len(snarr),96))
-			for i in xrange(len(snarr)):
+			for i in range(len(snarr)):
 				sn = snarr[i]
 				tmpfiles = hsn[sn]
 				kmutmatrix = np.zeros(96)
@@ -319,7 +319,7 @@ if __name__ == "__main__":
 				sntotmutmatrix[i,:] = kmutmatrix[:]
 		if usegroup:
 			gntotmutmatrix = np.zeros((len(gnarr),96))
-			for i in xrange(len(gnarr)):
+			for i in range(len(gnarr)):
 				gn = gnarr[i]
 				tmpfiles = hgn[gn]
 				kmutmatrix = np.zeros(96)
@@ -360,7 +360,7 @@ if __name__ == "__main__":
 	sdist = nmf.fit_transform(sndatanorm)
 	vdist = nmf.components_
 	signame = []
-	for i in xrange(lastncom):signame.append("signature%d"%(i+1))
+	for i in range(lastncom):signame.append("signature%d"%(i+1))
 	## plot mutation spectrum 
 	signature.plotMutSpectrum(vdist,signame,fig_prefix="signature_MutSpectrum")
 	## plot samples signaure composition

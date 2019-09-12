@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*
-# linear regress and  local weighted regress
-
-# LOESS ~ LOWESS
-
 #!/usr/bin/python
-# please add your code here!
- 
+
+# linear regress and  local weighted regress
 import re;
 import sys;
 import time;

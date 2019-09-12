@@ -15,18 +15,18 @@ def randomMut(list1):
 	lenlist = len(list1)
 	idx = gwaspls.resampling2([1,]*lenlist,lenlist)
 	return list1[idx].tolist()
-#for i in xrange(10):
+#for i in range(10):
 #	print randomMut([1,1,1,1,0,0,0])
 
 def get_And_Xor(set1,set2,ntimes=1000):
 	# use permutation test to do MRT
 	setand = np.sum(set1 * set2)
 	setxor = np.sum((set1 + set2)==1)
-	print set1
-	print set2
-	print setand
-	print setxor
-	print len(set1)
+	#print set1
+	#print set2
+	#print setand
+	#print setxor
+	#print len(set1)
 	outand = []
 	outxor = []
 	count = 0
@@ -40,7 +40,7 @@ def get_And_Xor(set1,set2,ntimes=1000):
 		tmp2 = np.sum((np.asarray(set1mut) + set2)==1) 
 		outand.append( tmp1 )
 		outxor.append( tmp2 )
-		print tmp1,tmp2
+		print(tmp1,tmp2)
 		count += 1
 		if count > ntimes:break
 		if count %10 == 0: sys.stderr.write("%d\n"%count)
@@ -51,7 +51,6 @@ if __name__ == "__main__":
 	setB  = set(["D","E","F","M","N"])
 	setA = np.asarray([1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
 	setB = np.asarray([0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
-	print get_And_Xor(setA,setB,ntimes=10000)
+	print(get_And_Xor(setA,setB,ntimes=10000))
 
-#def bedregion_cal(bedfile,mutations,)
 

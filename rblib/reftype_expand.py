@@ -2,7 +2,7 @@ import sys
 from  Bio.Seq import Seq
 from rblib import seqio,bamio,defs
 import os
-f = file(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types","r")
+f = open(os.path.dirname(os.path.abspath(__file__))+os.path.sep+"ref.types","r")
 for line in f:
 	arr = line.rstrip("\n").split("\t")
 	context = arr[0]
@@ -15,7 +15,7 @@ for line in f:
 	rctriseq = str(Seq(triseq).reverse_complement())
 	refrc = defs.hrc[ref]
 	altrc = defs.hrc[alt]
-	print "\t".join([context, triseq, rctriseq, ref, refrc, alt, altrc, idx, str(int(idx)+96)])
+	print("\t".join([context, triseq, rctriseq, ref, refrc, alt, altrc, idx, str(int(idx)+96)]))
 f.close()
 
 

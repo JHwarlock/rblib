@@ -46,7 +46,7 @@ def create_style():
 import networkx as nx
 
 def node_parse(fn):
-	f = file(fn,"r")
+	f = open(fn,"r")
 	hnodeattr = {}
 	vmax = 0
 	for line in f:
@@ -58,7 +58,7 @@ def node_parse(fn):
 	return hnodeattr,-1*vmax,vmax
 
 def edge_parse(fn):
-	f = file(fn,"r")
+	f = open(fn,"r")
 	hedgeattr = {}
 	for line in f:
 		if line.startswith("#"):continue
@@ -113,7 +113,7 @@ def plot_ud_graph(edgeattr,nodeattr):
 	#node_shape = [ tmpstyle.nodeshape[hnode[v][0]]  for v in G]
 
 	# nodes
-	for i in xrange(len(tmpstyle.nodeshape)):
+	for i in range(len(tmpstyle.nodeshape)):
 		nodelist = []
 		#print G.nodes(data=True)
 		for node,nodeattr in G.nodes(data=True):
@@ -132,7 +132,7 @@ def plot_ud_graph(edgeattr,nodeattr):
 	cb.ax.yaxis.set_label_position('left')
 	"""
 	# edges
-	for i in xrange(len(tmpstyle.edgeshape)):
+	for i in range(len(tmpstyle.edgeshape)):
 		edgelist = []
 		#print G.edges(data=True)
 		for node1,node2,edgeattr in G.edges(data=True):

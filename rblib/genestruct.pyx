@@ -4,7 +4,9 @@ from rklib.utils import us_sort
 import seqio
 
 """
-Contributors  rongzhengqin@basepedia.com, zhush@basepedia.com
+Contributors
+	- rongzhengqin@basepedia.com
+	- zhush@basepedia.com
 """
 
 class Transcript(object):
@@ -32,7 +34,7 @@ class Transcript(object):
 		self.merged            = 0    # to record , whether exons was merged  # merge 是避免 exon 和 CDS 的冗余。从而得到非冗余的junction 位置
 		self.transcript_type   = transcript_type
 		# here we have two choice，one is and， another is or，如果我们选择 and， 那么partial rna就不在我们的考虑范围内
-		if leftmost <> None and rightmost <> None: ## if leftmost or rightmost  <> None, cds is kown or partial known. if has, there is self.cds  and  self.intro and self.utr  regions # but note , it include both partial and complete cds region , 那么对于partial cds，这个CDS 是 5‘ partial 还是3’ partial ， 由self.leftmost None? self.rightmost None ?，以及 strand 信息来判定。 对于cdsknown ，还要解析CDS 的 codon frame，0,1,2 。 因此，对于partial的解析 就要变得非常的小心
+		if leftmost is not None and rightmost is not None: ## if leftmost or rightmost  <> None, cds is kown or partial known. if has, there is self.cds  and  self.intro and self.utr  regions # but note , it include both partial and complete cds region , 那么对于partial cds，这个CDS 是 5‘ partial 还是3’ partial ， 由self.leftmost None? self.rightmost None ?，以及 strand 信息来判定。 对于cdsknown ，还要解析CDS 的 codon frame，0,1,2 。 因此，对于partial的解析 就要变得非常的小心
 			self.cdsknown = 1
 		else:
 			self.cdsknown = 0
@@ -93,7 +95,7 @@ cds             : %s
 		if self.rightmost == None: cds_stop   = sortexons[-1][-1]
 		else: cds_stop  = self.rightmost
 
-		for i in xrange(exon_num):
+		for i in range(exon_num):
 			starttmp  = sortexons[i][0]
 			endtmp    = sortexons[i][1]
 			try:
@@ -124,11 +126,11 @@ cds             : %s
 		cdsstatus2 = ["-1",] * len(CDS)
 		####
 		if strand == "+":
-			if self.leftmost <> None:
+			if self.leftmost is not None:
 				cdsstatus[0] = 0; cdsstatus2[0] = 0
 			else: # 当leftmost 缺失，可能是个3‘partial CDS， 那么需要确定第一个CDS frame 即可确定后续的frame
 				cdsstatus[0] = cdslen % 3; cdsstatus2[0] = [0,2,1][cdsstatus[0]]
-			for i in xrange(len(CDS)-1):
+			for i in range(len(CDS)-1):
 				cdsstatus[i+1] = (cdsstatus[i] - (CDS[i][-1]-CDS[i][0]))%3 
 				cdsstatus2[i+1] = (cdsstatus2[i] + (CDS[i][-1]-CDS[i][0]))%3
 
@@ -136,11 +138,11 @@ cds             : %s
 			self.utr3 = UTR_b  
 
 		elif strand == "-":
-			if self.rightmost <> None:
+			if self.rightmost is not None:
 				cdsstatus[-1] = 0; cdsstatus2[-1] = 0
 			else:
 				cdsstatus[-1] = cdslen % 3; cdsstatus2[-1] = [0,2,1][cdsstatus[-1]]
-			for i in xrange(len(CDS)-1,0,-1):
+			for i in range(len(CDS)-1,0,-1):
 				cdsstatus[i-1] = (cdsstatus[i] - (CDS[i][-1]-CDS[i][0]))%3
 				cdsstatus2[i-1] = (cdsstatus2[i] + (CDS[i][-1]-CDS[i][0]))%3
 			self.utr5 = UTR_b
@@ -208,15 +210,15 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
 			#if self.gene_start == None or self.gene_start > tmptranscript.exons[0][0]:self.gene_start = tmptranscript.exons[0][0]
 			#if self.gene_stop  == None or self.gene_stop  < tmptranscript.exons[-1][-1]: self.gene_stop = tmptranscript.exons[-1][-1]
 		allexons =  us_sort(allexons,0,1)
-		#print allexons
+		#print(allexons)
 		self.mergedexons = seqio.merge_region(allexons)
-		#print self.mergedexons
+		#print(self.mergedexons)
 		self.gene_start = self.mergedexons[0][0]
 		self.gene_stop  = self.mergedexons[-1][-1]
 		self.parsed = 1
 		return 0
 	def __gtfattr(self,obj,name):
-		if obj <> None:
+		if obj is not None:
 			return ' %s "%s";'%(name,obj)
 		else:return ""
 	def togtf(self):
@@ -258,17 +260,17 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
 			strout += Line%(chrom,transcript_source,"transcript",exons[0][0]+1,exons[-1][-1],".",strand,".",attr)
 			
 			if transcriptInstance.cdsknown and strand in ["+","-"]:
-				if transcriptInstance.leftmost <> None:
+				if transcriptInstance.leftmost is not None:
 					s = transcriptInstance.leftmost + 1
 					e = s + 2
 					annoregion = "start_codon" if strand == "+" else "stop_codon"
 					strout += Line%(chrom,transcript_source,annoregion,s,e,".",strand,"0",attr)
-				if transcriptInstance.rightmost <> None:
+				if transcriptInstance.rightmost is not None:
 					e = transcriptInstance.rightmost
 					s = e - 2
 					annoregion = "start_codon" if strand == "-" else "stop_codon"
 					strout += Line%(chrom,transcript_source,annoregion,s,e,".",strand,"0",attr)
-				for i in xrange(len(cds)): # however partial or whole， CDS should  export
+				for i in range(len(cds)): # however partial or whole， CDS should  export
 					s = cds[i][0] + 1
 					e = cds[i][-1]
 					tmpstatus = cdsstatus[i]
@@ -306,7 +308,7 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
 				cdsstatus = transcriptInstance.cdsstatus2 # use refgene CDS status rules
 				for s,e in utr1:
 					outexonstarts.append(str(s)); outexonstops.append(str(e)); outexonstatus.append("-1"); num += 1
-				for i in xrange(len(cds)):
+				for i in range(len(cds)):
 					s = cds[i][0]
 					e = cds[i][1]
 					tmpstatus = cdsstatus[i]
@@ -316,7 +318,7 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
 			else:
 				for s,e in exons:
 					outexonstarts.append(str(s)); outexonstops.append(str(e)); outexonstatus.append("-1"); num += 1
-			if transcriptInstance.leftmost <> None or transcriptInstance.rightmost <> None:
+			if transcriptInstance.leftmost is not None or transcriptInstance.rightmost is not None:
 				info1 = "cmpl"; info2 = "cmpl"
 				leftmost = transcriptInstance.leftmost; rightmost = transcriptInstance.rightmost;
 				if transcriptInstance.leftmost == None:
@@ -348,7 +350,7 @@ def readrefgene(refgenefile): ## read refgene format
 		tmptranscript = tmpgene.get_transcript(nm_name,transcriptname="",strand = strand,chrom=chrom,exons = [],leftmost=cds_s,rightmost=cds_e)
 		exonstarts = exonstarts.split(",")
 		exonends   = exonends.split(",")
-		for i in xrange(int(exon_num)):
+		for i in range(int(exon_num)):
 			tmptranscript.add_exon(int(exonstarts[i]),int(exonends[i]))
 		#tmptranscript.sortexon()
 		tmptranscript.parse_transcript()
@@ -391,11 +393,11 @@ class Annoregion2(object):
 			tmptranscript.rightmost = end if tmptranscript.rightmost  == None else max(tmptranscript.rightmost,end)
 		else:
 			tmptranscript.leftmost = start if tmptranscript.leftmost == None else min(tmptranscript.leftmost,start)
-		if tmptranscript.rightmost <> None and tmptranscript.leftmost <> None: tmptranscript.cdsknown = 1
+		if tmptranscript.rightmost is not None and tmptranscript.leftmost is not None: tmptranscript.cdsknown = 1
 		return 0
 
 	def gtf2exons(self,gtffn):
-		f = file(gtffn,"r")
+		f = open(gtffn,"r")
 		for line in f:
 			if line.startswith("#"):continue
 			chrom,source,region_type,start,end,score,strand,codon,commnet = line.rstrip("\n").split("\t")
@@ -436,7 +438,7 @@ def gene2file(hgene,fmt="gtf",outputprefix = "test."):
 	# brefore parse
 	assert fmt in ["gtf","refgene"]
 	outputfn = outputprefix + fmt
-	fout = file(outputfn,"w")
+	fout = open(outputfn,"w")
 	if fmt == "gtf":
 		for geneid in hgene:
 			fout.write(hgene[geneid].togtf())

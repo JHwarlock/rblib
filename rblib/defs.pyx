@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
-# 简并碱基Degenerate base
+
+# chromosome name conversion
 hchr= {"chr1":"1",
 		"chr2":"2",
 		"chr3":"3",
@@ -27,7 +28,7 @@ hchr= {"chr1":"1",
 		"chrM":"MT",
 		"chrMT":"MT",
 		}
-
+# hg38 length
 hg38chrlen = {
 		"chr1":248956422,
 		"chr2":242193529,
@@ -57,6 +58,7 @@ hg38chrlen = {
 		"chrMT":16569,
 		}
 
+# 简并碱基Degenerate base
 hdg = {"A":"A/A",
 		"C":"C/C",
 		"G":"G/G",
@@ -74,11 +76,13 @@ hdg = {"A":"A/A",
 		"N":"A/T/C/G",
 		}
 import re
+# re for nucleotide
 nuclpt  = re.compile("[^ACGTNU]",re.I)
 reppt   = re.compile("N|n|a|c|g|t") # or [Nnacgt]
 gcconpt = re.compile("G|C",re.I)
 cpg     = re.compile("CG",re.I)
 
+# mutation types
 hmutidx = {"AG":0,
 		"TC":0, # AT_Transitions
 		"AC":1, # AT_Transversions
@@ -93,8 +97,24 @@ hmutidx = {"AG":0,
 		"GT":3, 
 		} 
 
+# point mutation for dna/rna idx
+hmutstat = {#ACGT [dna_idx,rna_idx]
+		"AC":[5,0],
+		"AG":[4,1],
+		"AT":[3,2],
+		"CA":[0,3],
+		"CG":[2,4],
+		"CT":[1,5],
+		"GA":[1,6],
+		"GC":[2,7],
+		"GT":[0,8],
+		"TA":[3,9],
+		"TC":[4,10],
+		"TG":[5,11],
+		"header":[["C->A/G->T","C->T/G->A","C->G/G->C","T->A/A->T","T->C/A->G","T->G/A->C"],["A->C","A->G","A->T","C->A","C->G","C->T","G->A","G->C","G->T","T->A","T->C","T->G"]],
+		}
 
-# 1. 核苷酸互补表
+# 1. 核苷酸互补表 Nucleotide complementation table
 hrc = {'A':'T',
 		'a':'T',
 		'T':'A',
@@ -108,6 +128,7 @@ hrc = {'A':'T',
 		'N':'N',
 		'n':'N',
 		}
+# Nucleotide idx
 hnuclidx = {'A':0,
 		'a':0,
 		'C':1,
@@ -125,6 +146,7 @@ hnuclidx = {'A':0,
 		'cg':5,
 		'Cg':5,
 		}
+# fam class
 hrfam = {
 		"Cis-reg_leader":"Cis-reg",
 		"Intron":"Intron",
@@ -153,7 +175,7 @@ hrfam = {
 """
 ['Cis-reg_leader', 'Intron', 'Gene_antitoxin', 'Cis-reg', 'Gene_tRNA', 'Gene_snRNA_splicing', 'Gene_miRNA', 'Gene_sRNA', 'Gene_lncRNA', 'Cis-reg_thermoregulator', 'Gene_snRNA_snoRNA_HACA-box', 'Cis-reg_frameshift_element', 'Gene_snRNA_snoRNA_scaRNA', 'Gene_CRISPR', 'Cis-reg_IRES', 'Gene_antisense', 'Gene_ribozyme', 'Cis-reg_riboswitch', 'Gene_snRNA_snoRNA_CD-box', 'Gene', 'Gene_rRNA', 'Gene_snRNA']
 """
-
+# gene class in Encode
 hgeneclass = { 
         "3prime_overlapping_ncrna":"lnc",            # Long non-coding RNA genes
         "antisense":"lnc",                           # Long non-coding RNA genes

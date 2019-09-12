@@ -10,6 +10,6 @@ def callrsqure():#reffreq,altfreq,refgenofreq,hetfreq,altgenofreq):
 	pAb = pA * pb # x12
 	pab = pa * pb # x22
 	D = pAB * pab - paB*pAb
-	print D
-callrsqure()
+	print(D)
+# callrsqure()
 

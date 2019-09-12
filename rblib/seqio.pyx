@@ -92,7 +92,7 @@ def fileread(fn):
 	elif fn.endswith(".bz2"):
 		f = compress.bz2file(fn)
 	else:
-		f = file(fn,"r")
+		f = open(fn,"r")
 	return f
 
 def bed6_parse(fn):
@@ -228,7 +228,7 @@ def gtf_parse(fn,add="chr"):
 
 def sortmergebedfile(bedfile):
 	hgenesregion = {} # gene: chrom,start, end  ## bedfile  0-based [ ) 
-	bedfilef = file(bedfile,"r")
+	bedfilef = open(bedfile,"r")
 	for line in bedfilef:
 		if line.startswith("#"):continue
 		chrom,start,end,genename = line.rstrip("\n").split("\t")
@@ -244,8 +244,8 @@ def sortmergebedfile(bedfile):
 
 if __name__ == "__main__":
 	a = [[1,10],[17,22],[40,44],[42,47],[46,100],[101,408]]
-	print a
-	print merge_region(a)
+	print(a)
+	print(merge_region(a))
 
 
 

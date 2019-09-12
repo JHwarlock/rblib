@@ -6,7 +6,7 @@ def disEclud(vecA,vecB):
 def randCent(dataSet,k):
 	n = np.shape(dataSet)[1]
 	centroids = np.asmatrix(np.zeros((k,n)))
-	for j in xrange(n):
+	for j in range(n):
 		minJ = np.min(dataSet[:,j])
 		rangeJ = np.float(np.max(dataSet[:,j])-minJ)
 		centroids[:,j] = minJ+rangeJ*np.random.rand(k,1)
@@ -20,10 +20,10 @@ def kMeans(dataSet,k,distMeas=disEclud,createCent = randCent):
 	clusterChanged = True
 	while clusterChanged:
 		clusterChanged = False
-		for i in xrange(m):
+		for i in range(m):
 			minDist = np.inf
 			minIndex = -1
-			for j in xrange(k):
+			for j in range(k):
 				distJI = distMeas(centroids[j,:],dataSet[i,:])
 				if distJI < minDist:
 					minDist = distJI
@@ -32,7 +32,7 @@ def kMeans(dataSet,k,distMeas=disEclud,createCent = randCent):
 				clusterChanged = True
 			clusterAssment[i,:] = minIndex,minDist**2
 		#print centroids
-		for cent in xrange(k):
+		for cent in range(k):
 			ptsInClust = dataSet[np.nonzero(clusterAssment[:,0].A == cent)[0]]
 			centroids[cent,:] = np.mean(ptsInClust,axis =0)
 	return centroids,clusterAssment
@@ -46,12 +46,12 @@ def bikmeans(dataSet,k,distMeas=disEclud):
 		clusterAssment[j,1] = distMeas(np.mat(centroid0),dataSet[j,:]) ** 2
 	while (len(centList) < k+1):
 		lowestSSE = np.inf
-		for i in xrange(len(centList)):
+		for i in range(len(centList)):
 			ptsInCurrCulster = dataSet[np.nonzero(clusterAssment[:,0].A == i)[0],:]
 			centroidMat,splitClustAss = kMeans(ptsInCurrCulster,2,distMeas)
 			sseSplit = np.sum(splitClustAss[:,1])
 			sseNotSplit = np.sum(clusterAssment[np.nonzero(clusterAssment[:,0].A != i)[0],1])
-			print "sseSplit, and sseNotSplit: ",sseSplit,sseNotSplit
+			print("sseSplit, and sseNotSplit: ",sseSplit,sseNotSplit)
 			if (sseSplit+sseNotSplit) <= lowestSSE:
 				bestCentToSplit = i
 				bestNewCents  =  centroidMat
@@ -76,6 +76,6 @@ if __name__ == "__main__":
 	from scipy.cluster.vq import whiten
 	xy = whiten(xy)
 	cents,clusterass =  bikmeans(xy,3)	
-	print cents
+	print(cents)
 
 

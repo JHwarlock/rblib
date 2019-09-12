@@ -16,7 +16,7 @@ def bic_kmeans(X,maxk=None):
 	retbicvalues = []
 	reses = []
 	idxes = []
-	for numk in xrange(1,maxk+1):
+	for numk in range(1,maxk+1):
 		#variance_total = np.sum((xy - np.mean(xy,axis=0))**2) / (n-numk)
 		#print variance_total
 		#res, idx = kmeans2(xy,numk,minit='points')
@@ -25,7 +25,7 @@ def bic_kmeans(X,maxk=None):
 		idxes.append(idx)
 		LDtot = 0
 		others = numk+numk*p / 2 * np.log(n)
-		for i in xrange(numk):
+		for i in range(numk):
 			Rn = np.sum(idx==i)
 			if Rn <= 1:continue
 			#logRn = np.log(Rn)
@@ -83,5 +83,5 @@ if __name__ == "__main__":
 	print bic_kmeans(xy,maxk=60)
 	#print cents,labels
 	"""
-	print proportion_test(5.0,25.0,8.0,17.0,tail='left')
+	print(proportion_test(5.0,25.0,8.0,17.0,tail='left'))
 

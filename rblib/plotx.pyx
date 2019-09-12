@@ -107,7 +107,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	tmpidxcolor = 0
 	# process colors 
 	allgroups = []
-	for i in xrange(len(groups)):
+	for i in range(len(groups)):
 		group = groups[i]
 		setsortgroups = sorted(set(dfgroup[group]))
 		allgroups = allgroups + setsortgroups
@@ -115,7 +115,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	hcolors = inscolor(allgroups,cmtmp)
 	hcolors["Unk"] = u"#C1C1C1"
 	hcolors["unk"] = u"#C1C1C1"
-	for i in xrange(len(groups)):
+	for i in range(len(groups)):
 		group = groups[i]
 		ax = fig.add_subplot(GS[idx*2+4,0])
 		#ax.broken_barh([(110, 10),(120,10),(130,10),(150, 10)], (10, 9), facecolors='blue',alpha=0.5)
@@ -127,7 +127,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 		#	colors[setsortgroups.index("Unk")] = u"#C1C1C1"
 		tmpidxcolor += len(setsortgroups)
 		legends = []
-		for k in xrange(len(setsortgroups)):
+		for k in range(len(setsortgroups)):
 			#l = ax.broken_barh(ret_xlocations_x[i],(0,1),facecolors=colors[i],alpha=0.5)
 			groupname = setsortgroups[k]
 			tmpidx = dfgroup[group]==groupname
@@ -147,7 +147,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	#colors = styles(len(stacknames))[0]
 	colors = ["#0E5088","#43AF57"]
 	legends = []
-	for i in xrange(n):
+	for i in range(n):
 		if i:
 			cumtmp = cumtmp + np.asarray(stackdata[i-1,:])
 			rects = stackvAX.bar(xlocations,stackdata[i,:],width,color=colors[i],linewidth=0.0,alpha=1.0,bottom=cumtmp,align='edge',label=stacknames[i])
@@ -183,8 +183,8 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	##### plot mutation 
 	#ngene,nsamples = genesframe.shape
 	mutcolors = styles(len(mutlist),colorgrad="custom2")[0]
-	print mutcolors
-	print mutlist
+	print(mutcolors)
+	print(mutlist)
 	#mutcolors.append("#C0C0C0")
 	stackvAX = fig.add_subplot(GS[mutpos,0])
 	ngenes, nsamples= genemutdf.shape
@@ -193,22 +193,22 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	samplenames = genemutdf.columns
 	genenames   = genemutdf.index
 	htmp = {}
-	for i in xrange(ngenes-1,-1,-1):
-		if i <> ngenes-1:
+	for i in range(ngenes-1,-1,-1):
+		if i != ngenes-1:
 			cumtmp = cumtmp + np.ones(len(samplenames))
-			for j in xrange(len(mutlist)):
+			for j in range(len(mutlist)):
 				tmpidx = genemutdf.loc[genenames[i]] == mutlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=mutcolors[j],linewidth=0,alpha=1.0,bottom=cumtmp[tmpidx.values],align='edge')
-					if mutlist[j] not in htmp and mutlist[j] <> "A":
+					if mutlist[j] not in htmp and mutlist[j] != "A":
 						legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
 		else:
 			cumtmp = 0
-			for j in xrange(len(mutlist)):
+			for j in range(len(mutlist)):
 				tmpidx = genemutdf.loc[genenames[i]] == mutlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=mutcolors[j],linewidth=0,alpha=1.0,align='edge')
-					if mutlist[j] not in htmp and mutlist[j] <> "A":
+					if mutlist[j] not in htmp and mutlist[j] != "A":
 						legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
 
 	stackvAX.set_xlim(xlocations[0],xlocations[-1]+width)
@@ -231,11 +231,11 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 	legends = ["Relapse","metastasis","no"] # chage to P
 	#legends = ["Relapse","metastasis"]
 	stackvdata = APOBEC.loc[legends].values
-	print stackvdata
+	print(stackvdata)
 	n,p = stackvdata.shape
-	for i in xrange(n):
+	for i in range(n):
 		if i:
-			print i
+			print(i)
 			cumtmp = cumtmp + np.asarray(stackvdata[i-1,:])
 			rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color=hcolors[legends[i]],linewidth=linewidth,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
 		else:
@@ -255,10 +255,10 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 		cnvlist = gainloss.index
 		cnvcutoff = [-1,1]
 		htmp = {}
-		for i in xrange(ngenes-1,-1,-1):
-			if i <> ngenes-1:
+		for i in range(ngenes-1,-1,-1):
+			if i != ngenes-1:
 				cumtmp = cumtmp + np.ones(len(samplenames))
-				for j in xrange(len(cnvlist)):
+				for j in range(len(cnvlist)):
 					tmpidx = CNV.loc[genenames[i]] == cnvcutoff[j]
 					if tmpidx.sum() >= 1:
 						rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.8,bottom=cumtmp[tmpidx.values],align='edge')
@@ -266,7 +266,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 							legends.append(rects);legendsnames.append(cnvlist[j]);htmp[cnvlist[j]] = None
 			else:
 				cumtmp = 0
-				for j in xrange(len(cnvlist)):
+				for j in range(len(cnvlist)):
 					tmpidx = CNV.loc[genenames[i]] == cnvcutoff[j]
 					if tmpidx.sum() >= 1:
 						rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.8,align='edge')
@@ -289,7 +289,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
 		alpha=0.8
 		width=0.95
 		legends = ["Loss","Gain"]
-		for i in xrange(n):
+		for i in range(n):
 			if i:
 				cumtmp = cumtmp + np.asarray(stackvdata[i-1,:])
 				rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color="r",linewidth=linewidth,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
@@ -315,9 +315,9 @@ if __name__ == "__main__":
 	traitdata = traits.TraitInfo()
 	traitdata.parse(sys.argv[1])
 	datamut = []
-	for i in xrange(10):
+	for i in range(10):
 		datamut.append(["A",]*82)
-	genemutdf = pd.DataFrame(np.asarray(datamut),index=["1","2","3","4","5","6","7","8","9","10"],columns=range(1,83))
+	genemutdf = pd.DataFrame(np.asarray(datamut),index=["1","2","3","4","5","6","7","8","9","10"],columns=list(range(1,83)))
 	genemutdf.values[0,12] = "frame-shift"
 	genemutdf.values[1,3]  = "in-frame-shift"
 	genemutdf.values[4,20] = "splice"

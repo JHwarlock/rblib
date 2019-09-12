@@ -29,7 +29,7 @@ class TraitInfo(object):
 		strout += "===========================================\n"
 		return strout
 	def parse(self,traitinfo):
-		f = file(traitinfo,"r")
+		f = open(traitinfo,"r")
 		data = []
 		for line in f:
 			if line.startswith("###"):
@@ -50,7 +50,7 @@ class TraitInfo(object):
 					sys.stderr.write("line: %s"%line)
 					sys.exit(1)
 				self.traitnum = len(self.traitname)
-				for i in xrange(len(self.traitname)):
+				for i in range(len(self.traitname)):
 					#self.traitlevel[self.traitname[i]] = []
 					self.traitidx[i] = self.traitname[i]
 				continue
@@ -71,5 +71,5 @@ class TraitInfo(object):
 if __name__ == "__main__":
 	ti = TraitInfo()
 	ti.parse(sys.argv[1])
-	print ti
+	print(ti)
 

@@ -2,7 +2,7 @@ import sys
 from rklib import compress
 from rklib import utils
 from Bio import motifs
-import commands
+import subprocess
 try:
 	from Bio.motifs.jaspar.db import JASPAR5
 except:
@@ -22,9 +22,9 @@ class motif_jaspar(object):
 		self.n = 0
 		self.info = {}
 		##sqlite3   sql   or  tsv shelve ## use the suffix: .sqlite3  .sql .txt .db
-		if dbinfo==None:pass
+		if dbinfo is None:pass
 		else:
-			f = file(dbinfo,"r")
+			f = open(dbinfo,"r")
 			for line in f:
 				if line.startswith("#"):continue
 				number,acc,version,name,mclass,family,medline,protein,taxid_s = line.rstrip("\n").split("\t")
@@ -157,11 +157,11 @@ class motif(object):
 			pass
 		weblogo < test.matrix.txt --size large --title name --fineprint name  --errorbars NO -c classic   -D transfac > test.eps
 		"""
-		ftmp = file(outdir+"/"+".tmp.txt","w")
+		ftmp = open(outdir+"/"+".tmp.txt","w")
 		ftmp.write(str(self.m.format("transfac")))
 		ftmp.close()
 		cmd1 = "weblogo -f %s --size large --scale-width NO --fineprint %s --errorbars NO -c classic -D transfac -F png --resolution 1000 1>%s.png"%(outdir+"/"+".tmp.txt",name,outdir+"/"+name)
 		cmd2 = "weblogo -f %s --size large --scale-width NO --fineprint %s --errorbars NO -c classic -D transfac -F svg --resolution 1000  1>%s.svg"%(outdir+"/"+".tmp.txt",name,outdir+"/"+name)
-		(exitstatus, outtext) = commands.getstatusoutput(cmd1)
+		(exitstatus, outtext) = subprocess.getstatusoutput(cmd1)
 		return 0
 

@@ -24,7 +24,7 @@ def parse_unstrand_bam(fbamfile1,fbamfile2,chrom,start,end,sslib=0):
 			if not read.is_paired:continue
 			if read.is_unmapped or read.mate_is_unmapped: continue
 			if read.is_read1:
-				if read.reference_id <> read.next_reference_id:
+				if read.reference_id != read.next_reference_id:
 					sys.stderr.write("[WARN] PE on different chromsome\nread1-> %s\nread2-> %s\n"%(str(read),str(read2)))
 					continue
 				read2 = fbamfile2.mate(read) 
@@ -128,7 +128,7 @@ def parse_strand_specificbam(fbamfile1,fbamfile2,chrom,start,end,sslib=3):
 				#count += 1
 				#print read
 				#t1 = time.time()
-				if read.reference_id <> read.next_reference_id:
+				if read.reference_id != read.next_reference_id:
 					sys.stderr.write("[WARN] PE on different chromsome\nread1-> %s\nread2-> %s\n"%(str(read),str(read2)))
 					continue
 				read2 = fbamfile2.mate(read)
@@ -167,7 +167,7 @@ def parse_strand_specificbam(fbamfile1,fbamfile2,chrom,start,end,sslib=3):
 			if not read.is_paired:continue
 			if read.is_unmapped or read.mate_is_unmapped: continue
 			if read.is_read1:
-				if read.reference_id <> read.next_reference_id:
+				if read.reference_id != read.next_reference_id:
 					sys.stderr.write("[WARN] PE on different chromsome\n%s\n%s\n"%(fbamfile1.references[read.reference_id],fbamfile1.references[read.next_reference_id]))
 				read2 = fbamfile2.mate(read)
 				read1blocks =  read.get_blocks()
@@ -189,5 +189,5 @@ def parse_strand_specificbam(fbamfile1,fbamfile2,chrom,start,end,sslib=3):
 
 if __name__ == "__main__":
 	for ret in parse_strand_specificbam(sys.argv[1],"Chr1",2000,4000,sslib=4):
-		print ret
+		print(ret)
 

@@ -36,7 +36,7 @@ class SFnet(object):
 	def __writeCorr(self):
 		p = self.p
 		Xcorr = np.eye(p)
-		for i in xrange(p-1):
+		for i in range(p-1):
 			dataset = h5py.File('%s/tmpdata_%d.hdf'%(self.tmppath,i),'r')
 			Xcorr[i,i+1:] = dataset["correlations"][:]
 			Xcorr[i+1:,i] = dataset["correlations"][:]
@@ -47,7 +47,7 @@ class SFnet(object):
 	def __writePvalue(self):
 		p = self.p
 		pvalues = np.zeros((p,p))
-		for i in xrange(p-1):
+		for i in range(p-1):
 			dataset = h5py.File('%s/tmpdata_%d.hdf'%(self.tmppath,i),'r')
 			pvalues[i,i+1:] = dataset["pvalues"][:]
 			pvalues[i+1:,i] = dataset["pvalues"][:]
@@ -57,7 +57,7 @@ class SFnet(object):
 		return 0
 	def __deltmpfile(self):
 		p = self.p
-		for i in xrange(p-1):
+		for i in range(p-1):
 			os.remove('%s/tmpdata_%d.hdf'%(self.tmppath,i))
 		return 0
 	def initCorr(self):
@@ -106,7 +106,7 @@ class SFnet(object):
 		Xadj **= self.power
 		n,p = Xadj.shape
 		sys.stderr.write("[Info] refresh Xadj\n")
-		for i in xrange(n):
+		for i in range(n):
 			Xadj[i,i] = 0 ### here has minus itself, so i == j, adj = 0, convenient for get connectivity use sum function
 		sys.stderr.write("[Info] store Xadj\n")
 		if 'adjacency' in self.datafile: del self.datafile['adjacency']
@@ -124,7 +124,7 @@ class SFnet(object):
 		"""
 		Tom = np.zeros((self.p,self.p))
 		atmp2 = np.zeros((self.p,1))
-		for i in xrange(self.p):
+		for i in range(self.p):
 			atmp1 = self.datafile['adjacency'][i,:]
 			atmp2[:,0] = self.datafile['adjacency'][:,i]
 			tmpmink = np.minimum(self.datafile['connectivity'],self.datafile['connectivity'][i])
@@ -136,7 +136,7 @@ class SFnet(object):
 		#=============
 		"""	
 		Tom = np.dot(self.datafile['adjacency'],self.datafile['adjacency'])
-		for i in xrange(self.p):
+		for i in range(self.p):
 			atmp = self.datafile['adjacency'][i,:]
 			tmpmink = np.minimum(self.datafile['connectivity'],self.datafile['connectivity'][i])
 			x = Tom[i,:] + atmp
@@ -175,18 +175,18 @@ class SFnet(object):
 		return 0
 	def outputmodule(self,fileout="sfnet.out"): # output cut off for edge 
 		# print connectivity
-		f1 = file(self.outdir+"/"+fileout + ".nodes.tsv","w")
-		f2 = file(self.outdir+"/"+fileout + ".edges.tsv","w")
+		f1 = open(self.outdir+"/"+fileout + ".nodes.tsv","w")
+		f2 = open(self.outdir+"/"+fileout + ".edges.tsv","w")
 		f1.write("#Gene\tModule_id\tInModule.connectivity\tOverall.connectivity\n")
 		f2.write("#Gene1\tGene2\tcorr\tpvalue\tadjacency\n")
 		p = len(self.anno)
-		for i in xrange(p):
+		for i in range(p):
 			name = self.anno[i]
 			f1.write("%s\t%s\t%s\t%s\n"%(name,self.modules[i],self.datafile['subconnectivity'][i],self.datafile['connectivity'][i]))
 		f1.close()
 		
-		for i in xrange(p-1):
-			for j in xrange(i+1,p):
+		for i in range(p-1):
+			for j in range(i+1,p):
 				tmpadj = self.datafile['adjacency'][i,j]
 				if self.datafile['pvalue'][i,j] < self.pcut:
 					f2.write("%s\t%s\t%.7f\t%.3e\t%.7f\n"%(self.anno[i],self.anno[j],self.datafile['corr'][i,j],self.datafile['pvalue'][i,j],tmpadj))

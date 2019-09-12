@@ -2,7 +2,7 @@
  * Prog Description:
  *
  * Author: Rong Zheng-Qin
- * Email: rongzhengqin@genomics.org.cn  or  zju3351689@gmail.com
+ * Email: rongzhengqin@genomics.org.cn  or  rongzhengqin@basepedia.com
  * */
 
 #ifndef SR_MSORT_H

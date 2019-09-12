@@ -141,7 +141,7 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
 		# Compute pairwise affinities
 		sum_Y = Math.sum(Math.square(Y), 1);
 		num = 1 / (1 + Math.add(Math.add(-2 * Math.dot(Y, Y.T), sum_Y).T, sum_Y));
-		num[range(n), range(n)] = 0;
+		num[list(range(n)), list(range(n))] = 0;
 		Q = num / Math.sum(num);
 		Q = Math.maximum(Q, 1e-12);
 
@@ -247,8 +247,8 @@ if __name__ == "__main__":
 	classname = ["partly","transcribed","translated"]
 	Y = []
 	X = []
-	for i in xrange(len(fns)):
-		f = file(fns[i],"r")
+	for i in range(len(fns)):
+		f = open(fns[i],"r")
 		for line in f:
 			if line.startswith("#"):continue
 			X.append(map(float,line.rstrip("\n").split("\t")[1:]))
@@ -256,6 +256,6 @@ if __name__ == "__main__":
 		f.close()
 	assert len(X) == len(Y)
 	X = np.asarray(X)
-	print X.shape
-	print len(Y)
+	print(X.shape)
+	print(len(Y))
 	tsne2(X,Y,ntsne=2,ndim=10,method="mds",plotprefix="plot",verbose=1,perplexity=40,n_iter=300)	

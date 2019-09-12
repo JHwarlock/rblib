@@ -38,7 +38,7 @@ class ABIparse(object):
 		xpos    = np.asarray(self.record.annotations['abif_raw']['PLOC1'])
 		offset  = np.max(Garr + Aarr + Tarr + Carr) * 0.005
 		ypos    = np.ones(self.seqlen) * -1 * offset
-		for i in xrange(self.seqlen):
+		for i in range(self.seqlen):
 			ax.text(xpos[i],ypos[i],self.seq1[i],ha='center',va='top',fontsize=fontsize)
 		
 		if seqpos is None:
@@ -53,7 +53,7 @@ class ABIparse(object):
 		statplot.plt.clf(); statplot.plt.close()
 		return 0
 	def save_to_fa(self,fn_out):
-		fout = file(fn_out+".fa","w")
+		fout = open(fn_out+".fa","w")
 		fout.write(">seq1\n%s\n>seq2\n%s\n"%(self.seq1,self.seq2))
 		fout.close()
 		return 0

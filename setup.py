@@ -17,7 +17,8 @@ package_dir = {"rblib": "rblib"}
 #exts = cythonize([Extension("fib", sources=["cfib.c", "fib.pyx"])])
 
 permutation = Extension("rblib.permutation.cal_permutation",
-		["rblib/permuatation/sr_msort.c",
+		[
+			"rblib/permuatation/sr_msort.c",
 			"rblib/permuatation/cal_permutation.c",
 			])
 
@@ -25,7 +26,7 @@ scripts = ['scripts/SFnetx',]
 
 metadata = {
 		"name":"rblib",
-		"version":"1.0.0",
+		"version":"2.0.0",
 		'description': "rblib",
 		'long_description': __doc__,
 		'author': "rongzhengqin",
@@ -37,7 +38,7 @@ metadata = {
 		'package_dir': package_dir,
 		'package_data': {'rblib': ['ref.types','ref.types.strands'],},
 		'requires': ['cython (>=0.21)'],
-		'ext_modules': cythonize("*/*.pyx")+[permutation,],
+		'ext_modules': cythonize("*/*.pyx",language_level=3)+[permutation,],
 		'scripts':scripts,
 		}
 

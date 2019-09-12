@@ -26,7 +26,7 @@ class Pdsampleinfo(object):
 		self.sns= []
 	
 	def parse_sampleinfo(self,sampleinfo,phenotype='category'):
-		fh = file(sampleinfo,"r")
+		fh = open(sampleinfo,"r")
 		header = None
 		data = []
 		for line in fh:
@@ -85,7 +85,7 @@ class SampleInfo(object):
 		self.hclassid2classname = {} # 记录 hclassid2classname["1"] => "CK"
 	
 	def parse_sampleinfo(self,sampleinfo,phenotype='category'):
-		fh = file(sampleinfo,"r")
+		fh = open(sampleinfo,"r")
 		classnumOrtraits = []
 		for line in fh:
 			if line.startswith("#") or line.startswith("\n") or line.startswith(" ") or line.startswith("\t"):continue
@@ -113,10 +113,10 @@ class SampleInfo(object):
 		self.uniqcolor,self.uniqline,self.uniqmarker = mplconfig.styles(len(self.uniqclasslabel))
 		self.samplecolors,self.samplelines,self.samplemarkers = mplconfig.styles(self.samplenum)
 		#self.uniqclasslabel = list(set(self.classlabels))
-		self.uniqclassnum = range(len(self.uniqclasslabel))
+		self.uniqclassnum = list(range(len(self.uniqclasslabel)))
 		h={}
 		tmpclasslabels = np.asarray(self.classlabels)
-		for i in xrange(len(self.uniqclasslabel)):
+		for i in range(len(self.uniqclasslabel)):
 			tmplabel = self.uniqclasslabel[i]
 			self.hidx[tmplabel] = tmpclasslabels == tmplabel
 			h[tmplabel] = i
@@ -346,9 +346,9 @@ class FactorFrame(object):
 			self.var.append(map(str,arr[1:]))
 		f.close()
 		self.var = np.asarray(self.var)
-		for i in xrange(self.lvs):
+		for i in range(self.lvs):
 			self.levels[i] = len(set(self.var[:,i].tolist()))
-		print self.levels
+		print(self.levels)
 		self.var = np.float64(self.var)
 		return 0
 
@@ -394,8 +394,8 @@ def twoDimDistr(object, fraction = 100):
 		except:
 			raise
 		else:sys.stderr.write('[WARN] Transfer the raw data to matrix format.\n')
-	if object.shape[-1] <> 2: return 1
-	#for i in xrange(np.shape(object)[-1]):
+	if object.shape[-1] != 2: return 1
+	#for i in range(np.shape(object)[-1]):
 	#	if np.max(abs(object[:, i])) > 1:
 	#		object[:, i] = object[:, i] / np.max(abs(object[:, i]))
 	xmin = -1#np.min(object[:,0]);
@@ -407,10 +407,10 @@ def twoDimDistr(object, fraction = 100):
 	x_coord.append(np.inf)
 	y_coord.append(np.inf)
 	countsMatrix = np.zeros((fraction, fraction))
-	for i in xrange(fraction):
+	for i in range(fraction):
 		bool_x = np.int32(object[:,0] >= x_coord[i]) * np.int32(object[:,0] < x_coord[i+1])
 		#x_idx = np.bool8(bool_x)
-		for j in xrange(fraction):
+		for j in range(fraction):
 			#tmp_y = object[:,1][x_idx]
 			#bool_x = np.int32(object[:,0] >= x_coord[i]) * np.int32(object[:,0] < x_coord[i+1])
 			bool_y = np.int32(object[:,1] >= y_coord[j]) * np.int32(object[:,1] < y_coord[j+1])
@@ -421,13 +421,13 @@ def quantile(Xnp):
 	ranks=[]
 	n, p = Xnp.shape
 	Xnormalize = np.asmatrix(np.zeros((n,p)))
-	for i in xrange(n):
+	for i in range(n):
 		ranks.append(np.int32(stats.rankdata(Xnp[i,:],"min")).tolist())
 	Xnptmp = Xnp.copy()
 	Xnptmp.sort()
 	ranks = np.asarray(ranks)
 	Xnptmpmean = np.asarray(np.mean(Xnptmp,axis = 0))
-	for i in xrange(n):
+	for i in range(n):
 		Xnormalize[i] = Xnptmpmean[0][ranks[i]-1]
 	return Xnormalize
 
@@ -452,7 +452,7 @@ def comb_replace(datalist,num):
 if __name__ == "__main__":
 	##can use abspath to get __file__ path ,and then load module
 	libpremutation  = ctypes.CDLL('cal_permutation.so')
-	print libpremutation.get_permutation
+	print(libpremutation.get_permutation)
 	#a = np.array([[5,4,3],[2,1,4],[3,4,6],[4,2,8]])
 	#a= np.asmatrix(np.transpose(a))
 	#print quantile(a)

@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib as mpl
 import matplotlib.cm as cm
+import matplotlib.colors as dcolors
 from matplotlib import cycler
 import itertools
 
@@ -133,6 +134,13 @@ colordefine = {
 		"custom1":["#db4d4d","#9b75b5","#6471af","#24bcb8","#b23b9c","#eace54","#878787","#aa6357","#70aa7a"],
 		"custom2":["#9b75b5","#878787","#6471af","#b23b9c","#aa6357","#70aa7a","#db4d4d","#24bcb8","#eace54"],
 		}
+
+
+for key in colordefine:
+	value   = colordefine[key]
+	cmap_i8 = dcolors.ListedColormap(value[:],'i8')
+	cm.register_cmap(name=key,cmap=cmap_i8)
+
 colorCMs = "Accent, Accent_r, Blues, Blues_r, BrBG, BrBG_r, BuGn, BuGn_r, BuPu, BuPu_r, CMRmap, CMRmap_r, Dark2, Dark2_r, GnBu, GnBu_r, Greens, Greens_r, Greys, Greys_r, OrRd, OrRd_r, Oranges, Oranges_r, PRGn, PRGn_r, Paired, Paired_r, Pastel1, Pastel1_r, Pastel2, Pastel2_r, PiYG, PiYG_r, PuBu, PuBuGn, PuBuGn_r, PuBu_r, PuOr, PuOr_r, PuRd, PuRd_r, Purples, Purples_r, RdBu, RdBu_r, RdGy, RdGy_r, RdPu, RdPu_r, RdYlBu, RdYlBu_r, RdYlGn, RdYlGn_r, Reds, Reds_r, Set1, Set1_r, Set2, Set2_r, Set3, Set3_r, Spectral, Spectral_r, Wistia, Wistia_r, YlGn, YlGnBu, YlGnBu_r, YlGn_r, YlOrBr, YlOrBr_r, YlOrRd, YlOrRd_r, afmhot, afmhot_r, autumn, autumn_r, binary, binary_r, bone, bone_r, brg, brg_r, bwr, bwr_r, cool, cool_r, coolwarm, coolwarm_r, copper, copper_r, cubehelix, cubehelix_r, flag, flag_r, gist_earth, gist_earth_r, gist_gray, gist_gray_r, gist_heat, gist_heat_r, gist_ncar, gist_ncar_r, gist_rainbow, gist_rainbow_r, gist_stern, gist_stern_r, gist_yarg, gist_yarg_r, gnuplot, gnuplot2, gnuplot2_r, gnuplot_r, gray, gray_r, hot, hot_r, hsv, hsv_r, inferno, inferno_r, jet, jet_r, magma, magma_r, nipy_spectral, nipy_spectral_r, ocean, ocean_r, pink, pink_r, plasma, plasma_r, prism, prism_r, rainbow, rainbow_r, seismic, seismic_r, spring, spring_r, summer, summer_r, tab10, tab10_r, tab20, tab20_r, tab20b, tab20b_r, tab20c, tab20c_r, terrain, terrain_r, viridis, viridis_r, winter, winter_r".split(", ")
 
 def __getallcolors():
@@ -152,7 +160,7 @@ def makestyles(a,n):
 	else:
 		raise
 	ret = []
-	for i in xrange(n):
+	for i in range(n):
 		ret.append(gen.next())
 	return ret
 
@@ -179,7 +187,7 @@ def styles(num,colorgrad=None,defaultnum = 8):
 	ret_color = []
 	ret_lines = []
 	ret_marker = []
-	for i in xrange(num):
+	for i in range(num):
 		ret_color.append(color_raw.next())
 		ret_lines.append(lines_raw.next())
 		ret_marker.append(marker_raw.next())
@@ -188,7 +196,7 @@ def styles(num,colorgrad=None,defaultnum = 8):
 def inscolor(stringlist,colorgrad = "npg"):
 	ret_color,ret_lines,ret_marker = styles(len(stringlist),colorgrad = colorgrad)
 	h = {}
-	for i in xrange(len(stringlist)):
+	for i in range(len(stringlist)):
 		h[stringlist[i]] = ret_color[i]
 	return h
 
@@ -196,10 +204,10 @@ def liststyle(datalist,colorgrad = "npg"):
 	setdatalist = list(set(datalist))
 	ret_color,ret_lines,ret_marker = styles(len(setdatalist),colorgrad = colorgrad)
 	h = {}
-	for i in xrange(len(setdatalist)):
+	for i in range(len(setdatalist)):
 		h[setdatalist[i]] = i
 	colorlist,lineslist,markerlist = [],[],[]
-	for i in xrange(len(datalist)):
+	for i in range(len(datalist)):
 		idx = h[datalist[i]]
 		colorlist.append(ret_color[idx])
 		lineslist.append(ret_lines[idx])
@@ -225,7 +233,7 @@ if __name__ == "__main__":
 	from rblib import statplot
 	data = []
 	names = []
-	for i in xrange(5):
+	for i in range(5):
 		names.append("S%d"%(i+1))
 		data.append(np.random.randn(1000) + i*2.2)
 	statplot.hist_groups(data,names,"data","testplot_hist",alpha=0.8,normed=False,bins=10,rwidth=0.8,hist=True,figsize=(6,5),histtype="bar")

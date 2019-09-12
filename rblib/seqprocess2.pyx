@@ -15,7 +15,7 @@ def refgene_parse_transcript(chrom,start,end,cds_start,cds_stop,exon_num,strand,
 	exon_ends_arr = exon_ends.split(",")
 	start +=1; cds_start += 1;
 	regions = None
-	for i in xrange(exon_num):
+	for i in range(exon_num):
 		exons.append(chrom+"_"+str(int(exon_starts_arr[i])+1)+"_"+exon_ends_arr[i])
 		try:
 			introns.append(chrom+"_"+str(int(exon_ends_arr[i])+1)+"_"+str(int(exon_starts_arr[i+1])))

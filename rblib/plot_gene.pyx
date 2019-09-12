@@ -38,7 +38,7 @@ class Exon_struct_plot(object):
 		self.tids = []
 		setbiotypes = list(set(biotypes))
 		ret_colors = statplot.color_grad(len(setbiotypes),cm.gist_rainbow)
-		for i in xrange(len(setbiotypes)):
+		for i in range(len(setbiotypes)):
 			self.biotypecolors[setbiotypes[i]] = ret_colors[i]
 		self.allplotexons = {}
 		self.startx = 0
@@ -83,7 +83,7 @@ class Exon_struct_plot(object):
 		#self.ax_gene = self.fig.add_subplot(self.subplotnum+str(idx)
 		#plotted = []
 		#hplotted = {}
-		for i in xrange(len(plot_symbols_exons)):
+		for i in range(len(plot_symbols_exons)):
 			#tmpbiotype = biotype[i]
 			#tcolor = self.biotypecolors[i]
 			tid,tname,chrom_t,start_t,end_t,strand,exons,biotype = plot_symbols_exons[i]
@@ -100,7 +100,7 @@ class Exon_struct_plot(object):
 				startx = min(startx, exons[0][0]); endx = max(endx, exons[-1][-1])
 				self.startx = startx
 				self.endx   = endx
-				print >> sys.stderr, '[WARN]: Original position infos has been updated by: chrom -> {} start -> {} end -> {}'.format(chrom, startx, endx)
+				sys.stderr.write('[WARN]: Original position infos has been updated by: chrom -> {} start -> {} end -> {}\n'.format(chrom, startx, endx))
 				#continue
 			#print gn,tid
 			self.tids.append(gn+"|"+tid)
@@ -167,7 +167,7 @@ class Exon_struct_plot(object):
 		#print self.subplotnum
 		#print str(0+plotnum)
 		if plotdata == "counts":
-			for i in xrange(len(sns)):
+			for i in range(len(sns)):
 				axs.append(self.fig.add_subplot(self.subplotnum1,self.subplotnum2,i+plotnum))
 				snname = sns[i]
 				sbam  = sbams[i]
@@ -201,7 +201,7 @@ class Exon_struct_plot(object):
 				else:
 					axs[i].set_ylabel("Read counts on genome (%s)"%snname)
 		elif plotdata == "TPM":# tmp for each pos
-			for i in xrange(len(sns)):
+			for i in range(len(sns)):
 				#axs.append(self.fig.add_subplot(self.subplotnum+str(i+plotnum)))
 				axs.append(self.fig.add_subplot(self.subplotnum1,self.subplotnum2,i+plotnum))
 				snname = sns[i];sbam  = sbams[i]
@@ -250,7 +250,7 @@ class Exon_struct_plot(object):
 			#broken_barh(tmps,(self.offset-0.15,0.3),facecolors = tcolor,alpha=0.6,lw=0)
 			ax.broken_barh(tmp,(offset-0.45,0.9),facecolors=color,lw=lw,alpha=alpha)
 			if len(readblocks) >=2:
-				for i in xrange(len(readblocks)-1):
+				for i in range(len(readblocks)-1):
 					end = readblocks[i+1][0]
 					start = readblocks[i][1]
 					t = np.linspace(start,end,2)

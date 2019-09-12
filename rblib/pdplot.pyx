@@ -64,7 +64,7 @@ def gbplot_pie(fractions, #values for the wedges
 	plotlabels = []
 	if outlegend:
 		count = 1
-		for i in xrange(len(labels_threshold)):
+		for i in range(len(labels_threshold)):
 			plotlabels.append(str(count))
 			count += 1
 	else:
@@ -85,7 +85,7 @@ def gbplot_pie(fractions, #values for the wedges
 		tmplabels = []
 		total = sum(meets_threshold)
 		count = 1
-		for i in xrange(len(labels_threshold)):
+		for i in range(len(labels_threshold)):
 			fraction_tmp = float(meets_threshold[i])/total*100
 			tmplabels.append((str(count)+": "+labels_threshold[i]+"("+ autopct+")")%fraction_tmp)
 			count += 1
@@ -94,8 +94,8 @@ def gbplot_pie(fractions, #values for the wedges
 		art.append(lgd)
 	if title:
 		ax.set_title(title)
-	print autopct
-	print meets_threshold
+	print(autopct)
+	print(meets_threshold)
 	plt.tight_layout()
 	if outlegend:
 		plt.savefig(fig_prefix+"_pie.png",format='png',additional_artists=art,bbox_inches="tight",dpi=300)

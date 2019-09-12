@@ -94,7 +94,7 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
 	tmpidxcolor = 0
 	
 	allgroups = []
-	for i in xrange(len(groups)):
+	for i in range(len(groups)):
 		group = groups[i]
 		setsortgroups = sorted(set(dfgroup[group]))
 		allgroups = allgroups + setsortgroups
@@ -102,7 +102,7 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
 	hcolors = inscolor(allgroups,cmtmp)
 	hcolors["Unk"] = unkcolor
 	hcolors["unk"] = unkcolor
-	for i in xrange(len(groups)):
+	for i in range(len(groups)):
 		group = groups[i]
 		ax = fig.add_subplot(GS[idx*2])
 		#ax.broken_barh([(110, 10),(120,10),(130,10),(150, 10)], (10, 9), facecolors='blue',alpha=0.5)
@@ -114,7 +114,7 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
 		#	colors[setsortgroups.index("Unk")] = unkcolor
 		tmpidxcolor += len(setsortgroups)
 		legends = []
-		for k in xrange(len(setsortgroups)):
+		for k in range(len(setsortgroups)):
 			#l = ax.broken_barh(ret_xlocations_x[i],(0,1),facecolors=colors[i],alpha=0.5)
 			groupname = setsortgroups[k]
 			tmpidx = dfgroup[group]==groupname
@@ -149,23 +149,23 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
 	htmp = {}
 	cumtmp = np.zeros(len(xlocations))
 	cnvnames = ["None","Amplification","Deletion"]
-	for i in xrange(ngenes-1,-1,-1):
-		#if i <> ngenes-1:
+	for i in range(ngenes-1,-1,-1):
+		#if i != ngenes-1:
 		if 1:
 			genename = targetgenelist[i]
 			if genename not  in genemutdf.index:continue
-			for j in xrange(len(mutlist)):
+			for j in range(len(mutlist)):
 				tmpidx = genemutdf.loc[genename] == mutlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.4,width,color=mutcolors[j],linewidth=0,alpha=1.0,bottom=cumtmp[tmpidx.values]+0.3,align='edge')
-					if mutlist[j] not in htmp and mutlist[j] <> "A":
+					if mutlist[j] not in htmp and mutlist[j] != "A":
 						legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
 			if genename not in CNV.index:continue
-			for j in xrange(len(cnvlist)):
+			for j in range(len(cnvlist)):
 				tmpidx =CNV.loc[genename] == cnvlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.5,bottom=cumtmp[tmpidx.values],align='edge')
-					if cnvlist[j] not in htmp and cnvlist[j] <> 0:
+					if cnvlist[j] not in htmp and cnvlist[j] != 0:
 						legendscnv.append(rects);legendsnamescnv.append(cnvnames[cnvlist[j]]);htmp[cnvlist[j]] = None
 			cumtmp = cumtmp + np.ones(len(samplenames))
 		"""
@@ -173,18 +173,18 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
 			cumtmp = np.zeros(len(xlocations))
 			genename = targetgenelist[i]
 			if genename not  in genemutdf.index:continue
-			for j in xrange(len(mutlist)):
+			for j in range(len(mutlist)):
 				tmpidx = genemutdf.loc[genename] == mutlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.4,width,color=mutcolors[j],linewidth=0,alpha=1.0,align='edge')
-					if mutlist[j] not in htmp and mutlist[j] <> "A":
+					if mutlist[j] not in htmp and mutlist[j] != "A":
 						legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
 			if genename not in CNV.index:continue
-			for j in xrange(len(cnvlist)):
+			for j in range(len(cnvlist)):
 				tmpidx = genemutdf.loc[genename] == cnvlist[j]
 				if tmpidx.sum() >= 1:
 					rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=1.0,align='edge') 
-					if cnvlist[j] not in htmp and cnvlist[j] <> 0:
+					if cnvlist[j] not in htmp and cnvlist[j] != 0:
 						legends.append(rects);legendsnames.append(cnvlist[j]);htmp[cnvlist[j]] = None
 		"""	
 	stackvAX.set_xlim(xlocations[0],xlocations[-1]+width)
@@ -215,9 +215,9 @@ if __name__ == "__main__":
 	traitdata = traits.TraitInfo()
 	traitdata.parse(sys.argv[1])
 	datamut = []
-	for i in xrange(10):
+	for i in range(10):
 		datamut.append(["A",]*82)
-	genemutdf = pd.DataFrame(np.asarray(datamut),index=["1","2","3","4","5","6","7","8","9","10"],columns=range(1,83))
+	genemutdf = pd.DataFrame(np.asarray(datamut),index=["1","2","3","4","5","6","7","8","9","10"],columns=list(range(1,83)))
 	genemutdf.values[0,12] = "frame-shift"
 	genemutdf.values[1,3]  = "in-frame-shift"
 	genemutdf.values[4,20] = "splice"

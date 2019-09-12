@@ -6,7 +6,7 @@ def _calculate_identity(best_alignments):
 	assert len(seqA) == len(seqB)
 	count = 0
 	totlen = 0
-	for i in xrange(len(match)):
+	for i in range(len(match)):
 		if match[i] == ".":continue
 		totlen += 1
 		if seqA[i] == seqB[i] and seqA[i] != "-":
@@ -28,9 +28,15 @@ def simalign(seqA,seqB):
 	iden = count *1.0  / max(min(len(seqA),len(seqB)),totlen) * 100
 	return iden
 
-
+def runtest():
+	try:
+		print(simalign("GACGTAcggg","AAGACGATACCCGGG"))
+		return 0
+	except Exception as error:
+		print(error)
+		return 1
 if __name__ == "__main__":
-	print simalign("GACGTAcggg","AAGACGATACCCGGG")
+	runtest()
 
 
 

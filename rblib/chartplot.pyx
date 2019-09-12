@@ -1,4 +1,5 @@
 #-*-encoding:utf-8 -*-  
+"""
 from pychartdir import * 
 setLicenseCode("SXZVFNRN9MZ9L8LGA0E2B1BB")#这个是注册，防止有logo产生
 data = [21, 18, 15, 12, 8, 24,17,18,19,20,11,17,23,29,11,79,100,58] 
@@ -45,5 +46,5 @@ b.setText(\
 	#40像素块来展示百分比，而且是右对齐  
 	"<*block,width=40,halign=right*>{percent}<*/*>%")
 c.makeChart("legendpie2.png")
-
+"""
 
