@@ -145,7 +145,7 @@ colorCMs = "Accent, Accent_r, Blues, Blues_r, BrBG, BrBG_r, BuGn, BuGn_r, BuPu, 
 
 def __getallcolors():
 	keys = []
-	for key in colordefine.keys() + colorCMs:
+	for key in list(colordefine.keys()) + colorCMs:
 		#if key.endswith("_r"):continue
 		keys.append(key)
 	return keys

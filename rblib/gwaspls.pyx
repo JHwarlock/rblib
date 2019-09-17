@@ -25,7 +25,7 @@ def resampling1(wvector,numselect):
 		Index:	the index of resampling samples (a list)
 	"""
 
-	wvector = map(float,wvector)
+	wvector = list(map(float,wvector))
 	pro = wvector/np.sum(wvector)
 	procum = np.cumsum(pro)
 	randseq = np.random.rand(numselect,1)
@@ -51,7 +51,7 @@ def resampling2(wvector,numselect):
 		Index:	the index of resampling samples (a list)
 	"""
 
-	wvector = map(float,wvector)
+	wvector = list(map(float,wvector))
 	pro = wvector/np.sum(wvector)
 	procum = np.cumsum(pro)
 	randseq = np.random.rand(numselect,1)

@@ -251,7 +251,7 @@ if __name__ == "__main__":
 		f = open(fns[i],"r")
 		for line in f:
 			if line.startswith("#"):continue
-			X.append(map(float,line.rstrip("\n").split("\t")[1:]))
+			X.append(list(map(float,line.rstrip("\n").split("\t")[1:])))
 			Y.append(classname[i])
 		f.close()
 	assert len(X) == len(Y)

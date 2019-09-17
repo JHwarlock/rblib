@@ -23,7 +23,7 @@ class POSIDX(object):
 			self.fpidx = open(self.fidx,"r")
 		except:return 1
 		self.fpidx.seek(0)
-		header = self.fpidx.next().rstrip("\n")
+		header = next(self.fpidx).rstrip("\n")
 		self.fpidx.seek(0)
 		if not header.startswith("#"):return 1
 		try:
@@ -99,7 +99,7 @@ class POSIDX(object):
 		for chrom in self.hidx:
 			for bintmp in self.hidx[chrom]:
 				out = [chrom,bintmp]+self.hidx[chrom][bintmp]
-				self.fpidx.write("\t".join(map(str,out))+"\n")
+				self.fpidx.write("\t".join(list(map(str,out)))+"\n")
 		self.fpidx.close()
 		self.hidx["header"] = [name,binsize,fsizetmp,f_ct,f_mt]
 		print(self.hidx["header"])

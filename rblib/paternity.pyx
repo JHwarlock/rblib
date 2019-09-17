@@ -15,7 +15,7 @@ def generate_individual_geno(alleles,cumprob,ploidy=2):
 	for i in range(ploidy):
 		idx = np.sum(np.random.random() > cumprob)
 		geno.append(alleles[idx])
-	return "|".join(map(str,geno))
+	return "|".join(list(map(str,geno)))
 
 def population_geno_persite(snnum,alleles,cumprob,ploidy=2):
 	popgeno = []
@@ -111,7 +111,7 @@ def combine_PE(probs):
 
 def calPI(setgeno1,setgeno2,prob): # parent ,child 
 	crossgeone = setgeno1 & setgeno2
-	crossgeone = map(int,list(crossgeone))
+	crossgeone = list(map(int,list(crossgeone)))
 	if len(crossgeone) == 2:
 		p = prob[crossgeone[0]]
 		q = prob[crossgeone[1]]
@@ -157,7 +157,7 @@ def TPcall(arr1,arr2):
 	TN = np.sum((arr1 + arr2) == 0)
 	FP = np.sum(arr1[(arr1 + arr2) == 1] == 0)
 	FN = np.sum(arr1[(arr1 + arr2) == 1] == 1)
-	return map(float,[TP,TN,FP,FN])
+	return list(map(float,[TP,TN,FP,FN]))
 
 def classmeasure(TP,TN,FP,FN):
 	# sensitivity, recall, hit rate, or true positive rate (TPR)

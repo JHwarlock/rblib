@@ -36,7 +36,7 @@ def exprs_profile(ntimes,c=1):
 	zerolabel =  ",".join(['0']*ntimes)
 	profile_matrix_out = []
 	for i in range(m):
-		tmplabel = ",".join(map(str,profile_matrix[i,:].tolist()))
+		tmplabel = ",".join(list(map(str,profile_matrix[i,:].tolist())))
 		if tmplabel == zerolabel: continue
 		profileslables.append(tmplabel)
 		profile_matrix_out.append(profile_matrix[i,:].tolist())
@@ -141,7 +141,7 @@ def parse_edgeRdir(num,edgeRdir,prefix="Root.matrix.xls",subpre="cond_",starts=1
 			h[i-starts][j-starts] = {}
 			fn = edgeRdir+ "/"+ prefix + "." + subpre+str(i)+"_vs_"+subpre+str(j)+".edgeR.DE_results"
 			f = open(fn,"r")
-			f.next()
+			next(f)
 			for line in f:
 				name,logfc,logCPM,PValue,fdr = line.strip().split("\t")
 				name = name.split("|")[-1]
@@ -258,7 +258,7 @@ def get_compare_fornorepeat(matrix,sampleinfo,edgeRdir,outdir="./",prefix="Root.
 	fhout_sig.write("#ID\tmatureID\tF statistics\tpvalue\tqvalue\tExprsMean\tTrend_label\tMultiple_comparison"+"\t"+"\t".join(mean_arr_header)+"\t"+"\t".join(fc_arr_header)+"\n")
 	for i in range(len(result_tot)):
 		nameid,anno,statics,pvalue,fdr = result_tot[i][0:5]
-		strout = "\t".join(map(str,result_tot[i]))
+		strout = "\t".join(list(map(str,result_tot[i])))
 		fhout_sig.write(strout+"\n")
 		tmpdata = h_data[nameid+"\t"+anno]
 		fhout_sig_mat.write(nameid+"\t"+anno+"\t"+tmpdata+"\n")

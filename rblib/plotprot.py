@@ -131,7 +131,7 @@ class ProtPlot(object):
 		for start,end,name in annoregions:
 			if name not in h:h[name] = []
 			h[name].append([start,end])
-		color = mplconfig.inscolor(h.keys(),"Paired")
+		color = mplconfig.inscolor(list(h.keys()),"Paired")
 		for name in h:
 			for start,end in h[name]:
 				patch = self.__plotarrow(start/self.bands,0.0,(end-start)/self.bands,0.0,regiontype = name,styles = ANNOSTYLE , color=color)

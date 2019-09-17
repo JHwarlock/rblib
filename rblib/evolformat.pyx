@@ -67,7 +67,7 @@ def	dist2file(names,distmat,fn):
 	fo = open(fn,"w")
 	fo.write("#\t%s\n"%("\t".join(names)))
 	for i in range(len(names)):
-		fo.write("%s\t%s\n"%(names[i],"\t".join(map(str,distmat[i].tolist()))))
+		fo.write("%s\t%s\n"%(names[i],"\t".join(list(map(str,distmat[i].tolist())))))
 	fo.close()
 	return 0
 

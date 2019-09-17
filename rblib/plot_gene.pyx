@@ -46,7 +46,7 @@ class Exon_struct_plot(object):
 		self.chromx = ""
 	def _plot_coor(self,chrom,startx,endx,frac=5):
 		region = np.linspace(startx,endx,frac).tolist()
-		strregion = map(format_pos,region)
+		strregion = list(map(format_pos,region))
 		self.ax_gene.plot(region,[self.offset,]*frac,'k-')
 		self.ax_gene.set_xticks(region)
 		self.ax_gene.set_xticklabels(strregion,rotation=0)
@@ -65,7 +65,7 @@ class Exon_struct_plot(object):
 		#print self.chromx,self.startx,self.endx
 	def _ax_subplot(self,ax,chrom,startx,endx,frac=5):
 		region = np.linspace(startx,endx,frac).tolist()
-		strregion = map(format_pos,region)
+		strregion = list(map(format_pos,region))
 		ax.plot(region,[0,]*frac,'k-')
 		ax.set_xticks(region)
 		ax.set_xticklabels(strregion,rotation=0)

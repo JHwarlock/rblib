@@ -285,7 +285,7 @@ def venn_plot(datalist,setnames,fig_prefix="venn_plot",hplot=None,figsize=(5,4))
 		f.close()
 	return 0
 
-def kdensity(var_arr,num = 200,fun='pdf',cdfstart=-np.inf):
+def kdensity(var_arr,num = 500,fun='pdf',cdfstart=-np.inf):
 	"""
 	plot theory distribution
 	y = P.normpdf( bins, mu, sigma)
@@ -301,8 +301,18 @@ def kdensity(var_arr,num = 200,fun='pdf',cdfstart=-np.inf):
 	kden = stats.gaussian_kde(np.asarray(var_arr))
 	#kden.covariance_factor = lambda : .25	
 	#kden._compute_covariance()
-	min_a = np.nanmin(var_arr)
-	max_a = np.nanmax(var_arr)
+	#============ never use min and max, but use the resample data
+	#min_a = np.nanmin(var_arr)
+	#max_a = np.nanmax(var_arr)
+	tmpmin = []
+	tmpmax = []
+	for i in range(30):
+		resample_dat = kden.resample(5000)
+		resample_dat.sort()
+		tmpmin.append(resample_dat[0,4])
+		tmpmax.append(resample_dat[0,-5])
+	min_a = np.mean(tmpmin)
+	max_a = np.mean(tmpmax)
 	xnew = np.linspace(min_a, max_a, num)
 	if fun == 'cdf':
 		ynew = np.zeros(num)
@@ -1407,7 +1417,7 @@ def err_line_group(data,error,group_label,xticklabel,xlabel,ylabel,colors,fig_pr
 	if ylim == None:
 		ax.set_ylim(np.min(data)-yregion*0.1,np.max(data) + yregion*0.1)
 	fig.tight_layout()
-	ax.grid(True)
+	ax.grid(False)
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
 	plt.savefig(fig_prefix+".svg",format='svg',dpi=300)
 	plt.clf()
@@ -1889,7 +1899,7 @@ def hist_groups(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,colo
 	for i in range(n):
 		xp,yp = kdensity(data[i],fun="pdf")
 		if hist:
-			ax.hist(data[i],histtype=histtype,rwidth=rwidth,linewidth=linewidth,bins=bins, alpha=alpha,normed=normed,color=colors[n-i-1])
+			ax.hist(data[i],histtype=histtype,rwidth=rwidth,linewidth=linewidth,bins=bins, alpha=alpha,density=normed,color=colors[n-i-1])
 			ax.plot(xp,yp,color=colors[n-i-1],linestyle='--',lw=1.0)
 		else:
 			ax.plot(xp,yp,color=colors[n-i-1],linestyle='-',lw=2.0)
@@ -2004,20 +2014,21 @@ def show_values(pc, fmt="%.3f", **kw):
 			color = (1.0, 1.0, 1.0)
 		ax.text(x, y, fmt % value, ha="center", va="center", color=color)
 
-def pcolor_plot(Xnp,xsamplenames,ylabelnames,figname_prefix,txtfmt = "%.3f",figsize=(8,6)):
+def pcolor_plot(Xnp,xsamplenames,ylabelnames,figname_prefix,txtfmt = "%.3f",figsize=(8,6),measure="correlation"):
 	n,p = Xnp.shape
+	print(n,p)
 	fig = plt.figure(figsize=figsize,dpi=300)
 	ax = fig.add_subplot(111)
 	clean_axis(ax)
 	cplot = ax.pcolor(Xnp, edgecolors='k', linestyle= 'dashed', linewidths=0.2, cmap = cm.Blues)
-	ax.set_yticks(np.arange(p)+ 0.5)
+	ax.set_yticks(np.arange(n)+ 0.5)
 	ax.set_yticklabels(ylabelnames)
-	ax.set_xticks(np.arange(n)+0.5)
+	ax.set_xticks(np.arange(p)+0.5)
 	xlabelsL = ax.set_xticklabels(xsamplenames)
 	for label in xlabelsL:
 		label.set_rotation(90)
 	cb = fig.colorbar(cplot,ax=ax)
-	cb.set_label("correlation")
+	cb.set_label(measure)
 	cb.outline.set_linewidth(0)
 	ax.grid(visible=False)
 	show_values(cplot,fmt=txtfmt)

@@ -97,7 +97,7 @@ def fmtMycustom(FileName, Type):
 			p_id "{}";""".format(gene_id, trans_id, index + 1, gene_name, \
 					overLapRefId, overLapRefName, overLapGenetype, bio_type, 'P_X')
 			Commnets = ' '.join(Commnets.split()) 
-			String = '\t'.join(map(str, [chrom, Type, 'exon', start, end, '.', strand, '.', Commnets]))
+			String = '\t'.join(list(map(str, [chrom, Type, 'exon', start, end, '.', strand, '.', Commnets])))
 			fp1.write(String + '\n')
 	sortName = TmpName + '.sort'
 	with open(TmpName, 'r') as fp, open(sortName, 'w') as fp1:
@@ -108,7 +108,7 @@ def fmtMycustom(FileName, Type):
 				int(line.split('\t', 5)[4]), \
 				line.split('\t', 5)[5]] \
 				for line in fp], 0, 3, 4)
-		[fp1.write('\t'.join(map(str, line))) for line in Words]
+		[fp1.write('\t'.join(list(map(str, line)))) for line in Words]
 	bamio.gtfgffdb(sortName)
 	return sortName
 
@@ -195,7 +195,7 @@ class Annoregion(object):
 		#	tids= self.h[gid][1].keys()
 		#	for i in tids:
 		#		print self.h[gid][1][i][0]
-		ret =  self.__getret(),self.biotypes.keys()[:]
+		ret =  self.__getret(),list(self.biotypes.keys())[:]
 		return ret
 		
 					

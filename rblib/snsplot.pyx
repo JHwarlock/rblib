@@ -13,9 +13,9 @@ def kdeplot(x1,x2,xlabel='x',ylabel='y',cbarlabel="Density",cmap="Reds", shade=T
 		ax.plot(x1,x2,'bo',markersize=3,linewidth=0,alpha=0.4)
 	ax.set_xlabel(xlabel)
 	ax.set_ylabel(ylabel)
-	if xlim != None:
+	if xlim is not None:
 		ax.set_xlim(xlim[0],xlim[1])
-	if ylim != None:
+	if ylim is not None:
 		ax.set_ylim(ylim[0],ylim[1])
 	plt.savefig(fig_prefix+".png",format='png',dpi=300)
 	if svg:
