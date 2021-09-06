@@ -34,7 +34,7 @@ def parseregion(x,y,color,region):
 
 def parsekaryo(karyo_filename):
 	f = open(karyo_filename,"r")
-	target = ["chr"+str(x) for x in range(1,23) + ["X","Y"]] # ,"M","MT"]]
+	target = ["chr"+str(x) for x in list(range(1,23)) + ["X","Y"]] # ,"M","MT"]]
 	karyo_dict = {}
 	center_dict = {}
 	colornames = []
@@ -53,7 +53,7 @@ def parsekaryo(karyo_filename):
 	f.close()
 	for chrom in center_dict:
 		karyo_dict[chrom+"_center"] = (min(center_dict[chrom]) + max(center_dict[chrom]))/2
-	return karyo_dict,list(set(colornames))
+	return karyo_dict#,list(set(colornames))
 
 class Plotchrom(object):
 	def __init__(self,karyo_dict,unit=500000,ax = None,fig = None,height=5,ystart=0,orders=["chr3",]):
@@ -70,8 +70,8 @@ class Plotchrom(object):
 			self.plotorders[orders[i]] = i 
 
 	def __get_chrom_len(self,chromosome="chr1"): # chromosome: "chr1"
-		chromosome_start = float(min([x[1] for x in self.karyo_dict[chromosome]]))
-		chromosome_end = float(max(x[2] for x in self.karyo_dict[chromosome]))
+		chromosome_start = float(min([x[1] for x in list(self.karyo_dict[chromosome])]))
+		chromosome_end = float(max(x[2] for x in list(self.karyo_dict[chromosome])))
 		chromosome_length = chromosome_end - chromosome_start
 		centromere = self.karyo_dict[chromosome + "_center"] if chromosome + "_center" in self.karyo_dict else None
 		return chromosome_length,centromere

@@ -45,6 +45,20 @@ def kmeans(X,numk=3,nthreads=2):
 	return k_means.cluster_centers_,k_means.labels_
 
 
+def fisher_combine(p,w=None):
+	"""
+	np.sum(np.log(p)*w*3) * -2
+	"""
+	if w is None:
+		w = np.ones(len(p))
+	else:
+		assert np.sum(w) == 1
+		w = len(p) * np.asarray(w)
+	tmpchi2 = np.sum(np.log(p) * w) * -2
+	pvalue = 1- stats.chi2.cdf(tmpchi2,2*len(p))
+	return pvalue
+
+
 def proportion_test(x1,n1,x2,n2,d0=0,tail="two"):
 	p1 = x1*1.0/n1
 	p2 = x2*1.0/n2

@@ -143,7 +143,10 @@ class Signature(object):
 
 	def getmutation_pattern(self,fbvcf,flagstrand=0):# use only protein_coding genes exom region !!
 		# first to screen the bvcf and to get variants in beds 
-		tabix = bamio.tabixIO(fbvcf,seq_col=0,start_col=1,end_col=1)
+		try:
+			tabix = bamio.tabixIO(fbvcf,seq_col=0,start_col=1,end_col=1)
+		except:
+			tabix = bamio.tabixIO(fbvcf+".gz",seq_col=0,start_col=1,end_col=1)
 		contigs =  dict.fromkeys(tabix.contigs)
 		mutmatrix = np.zeros(self.signumber)
 
@@ -310,6 +313,7 @@ if __name__ == "__main__":
 			for i in range(len(snarr)):
 				sn = snarr[i]
 				tmpfiles = hsn[sn]
+				print(tmpfiles)
 				kmutmatrix = np.zeros(96)
 				for tmpfile in tmpfiles:
 					mutmatrix = signature.getmutation_pattern(tmpfile)
@@ -322,6 +326,7 @@ if __name__ == "__main__":
 			for i in range(len(gnarr)):
 				gn = gnarr[i]
 				tmpfiles = hgn[gn]
+				print(tmpfiles)
 				kmutmatrix = np.zeros(96)
 				for tmpfile in tmpfiles:
 					mutmatrix = signature.getmutation_pattern(tmpfile)

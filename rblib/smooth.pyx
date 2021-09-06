@@ -2,7 +2,61 @@
 import numpy as np
 from scipy import interpolate
 
-def sm_cv(data,winsize=10):
+def smooth(x,winsize=11,window='hanning',correct=True):
+	"""
+	smooth the data using a window with requested size.
+	This method is based on the convolution of a scaled window with the signal.
+	The signal is prepared by introducing reflected copies of the signal 
+	(with the window size) in both ends so that transient parts are minimized
+	in the begining and end part of the output signal.
+	
+	input:
+		x: the input signal 
+		winsize: the dimension of the smoothing window; should be an odd integer
+		window: the type of window from 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'
+					flat window will produce a moving average smoothing.
+
+	output:
+		the smoothed signal
+																				        
+	example:
+		t=linspace(-2,2,20)
+		x=sin(t)+randn(len(t))*0.1
+		y=smooth(x)
+																											    
+	see also: 
+		numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
+		scipy.signal.lfilter
+																																 
+	TODO: the window parameter could be the window itself if an array instead of a string
+	NOTE: length(output) != length(input), to correct this: return y[(winsize/2):(winsize/2)+len(x)] instead of just y.
+	"""
+	if x.ndim != 1:
+		raise ValueError, "smooth only accepts 1 dimension arrays."
+	if x.size < winsize:
+		raise ValueError, "Input vector needs to be bigger than window size."
+	if winsize < 3:
+		return x
+	if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+		raise ValueError, "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
+	
+	"""
+	if x = [1,2,3,4,5,6,7,8,9,10,11] ; winsize = 5
+	s = [5,4,3,2,1,2,3,4,5,6,7,8,9,10,11,10,9,8,7]
+	"""
+	s=np.r_[x[winsize-1:0:-1],x,x[-2:-winsize-1:-1]]
+	#print(len(s))
+	if window == 'flat': #moving average
+		w=np.ones(winsize,'d')
+	else:
+		w=eval('np.'+window+'(winsize)') # different weights method, https://scipy-cookbook.readthedocs.io/_static/items/attachments/SignalSmooth/smoothsignal.jpg 
+	y=np.convolve(w/w.sum(),s,mode='valid')
+	if correct:
+		return y[int(winsize/2):int(winsize/2) + len(x)]
+	else:
+		return y
+
+def sm_cv(data,winsize=11):
 	"Convolution smoothing"
 	window = np.ones(np.int(winsize)) / float(winsize)
 	return np.convolve(data,window,'same')
@@ -29,21 +83,28 @@ def sm_spl(xdata,ydata,winsize=0.5):
 	return sx,sy
 
 
-def sm_define(data,winsize=10,m="min"):
+def sm_define(data,winsize=11,m="mean",f='line',window=None):
 	lendata = len(data)
 	winsize = min(winsize,lendata)
-	newdata = np.zeros(lendata)
-	if m == "median":
-		fun = np.median
-	elif m == "mean":
-		fun = np.mean
-	elif m == "min":
-		fun = np.min
+	assert m in ["median","mean","min","max"]
+	fun = eval('np.'+ m) 
+	# 此处，我们提供一种和smooth 不同的填充方式
+	# if x = [1,2,3,4,5,6,7,8,9,10,11] ; winsize = 5
+	# => 'line':  s = [1,1,1,1,1,2,3,4,5,6,7,8,9,10,11,11,11,11,11]
+	# => 'cycle': s = [5,4,3,2,1,2,3,4,5,6,7,8,9,10,11,10,9,8,7]
+	x = data
+	if f == 'line':
+		s = np.r_[[x[0],]*(winsize-1),x,[x[-1],]*(winsize-1)]
+	elif f == 'cycle':
+		s = np.r_[x[winsize-1:0:-1],x,x[-2:-winsize-1:-1]]
+	newdata = []
+	if window is None:
+		for i in range(int(winsize/2),int(winsize/2) + lendata):
+			newdata.append(fun(s[i:i+winsize]))
 	else:
-		fun = None
-	for i in range(lendata-winsize):
-		newdata[i] = fun(data[i:i+winsize])
-	for i in range(lendata-1,lendata-1-winsize,-1):
-		newdata[i] = fun(data[i+1-winsize:i+1])
+		assert window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']
+		w = eval('np.'+window+'(winsize)')	
+		for i in range(int(winsize/2),int(winsize/2) + lendata):
+			newdata.append(np.sum(w/w.sum() * s[i:i+winsize]))
 	return newdata
 

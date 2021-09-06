@@ -133,6 +133,8 @@ colordefine = {
 		"D3": ["#5E9CC6","#FF7D0B", "#2CA02C", "#D62728", "#9467BD","#8C564B"],
 		"custom1":["#db4d4d","#9b75b5","#6471af","#24bcb8","#b23b9c","#eace54","#878787","#aa6357","#70aa7a"],
 		"custom2":["#9b75b5","#878787","#6471af","#b23b9c","#aa6357","#70aa7a","#db4d4d","#24bcb8","#eace54"],
+		"snswhite":["#4C72B0","#DD8452","#55A868","#C44E52","#8172B3","#937860","#DA8BC3","#8C8C8C","#CCB974","#64B5CD"],
+		"snsmuted":["#4878D0","#EE854A","#6ACC64","#D65F5F","#956CB4","#8C613C","#DC7EC0","#797979","#D5BB67","#82C6E2"],
 		}
 
 
@@ -165,7 +167,7 @@ def makestyles(a,n):
 	return ret
 
 def styles(num,colorgrad=None,defaultnum = 8):
-	if colorgrad is None:colorgrad = "npg"
+	if colorgrad is None:colorgrad = "lancet"
 	elif not isinstance(colorgrad,str):
 		try:
 			colorgrad = colorgrad.name
@@ -193,14 +195,14 @@ def styles(num,colorgrad=None,defaultnum = 8):
 		ret_marker.append(next(marker_raw))
 	return ret_color,ret_lines,ret_marker
 
-def inscolor(stringlist,colorgrad = "npg"):
+def inscolor(stringlist,colorgrad = "lancet"):
 	ret_color,ret_lines,ret_marker = styles(len(stringlist),colorgrad = colorgrad)
 	h = {}
 	for i in range(len(stringlist)):
 		h[stringlist[i]] = ret_color[i]
 	return h
 
-def liststyle(datalist,colorgrad = "npg"):
+def liststyle(datalist,colorgrad = "lancet"):
 	setdatalist = list(set(datalist))
 	ret_color,ret_lines,ret_marker = styles(len(setdatalist),colorgrad = colorgrad)
 	h = {}
@@ -216,7 +218,7 @@ def liststyle(datalist,colorgrad = "npg"):
 
 
 ## this is not same as sequential colormaps 
-def color_grad(num,colorgrad="npg"):
+def color_grad(num,colorgrad="lancet"):
 	cminstance = cm.get_cmap(colorgrad,num)
 	color_class = cminstance(np.linspace(0, 1, num))
 	return color_class

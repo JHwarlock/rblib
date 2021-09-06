@@ -84,9 +84,11 @@ def framey(ax):
     #ax.get_yaxis().set_ticks([])    
     for l in ax.get_xticklines() + ax.get_yticklines():
         l.set_markersize(0)
-def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,genemutdf,fig_prefix="testplot",width=0.84,CNV=None,APOBEC=None,gainloss=None,cmtmp="Set2",figsize=(10,8)): # input shold first to sort
+def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,genemutdf,fig_prefix="testplot",width=0.84,CNV=None,APOBEC=None,gainloss=None,hcolors=None,figsize=(10,8),linewidth=0.5,edgecolor='black'): # input shold first to sort
     fig = plt.figure(figsize=figsize)
-    #mapGS = gridspec.GridSpec(12,1,wspace=0.0,hspace=0.0,height_ratios=[2,1,0.1,1,0.1,1,0.1,1,0.1,1,0.1,1]) ### 
+    if hcolors is None:
+        sys.stderr.write("[ERROR] hcolor is None!\n")
+        return 1
     num_traits_c = len(groups)
     if isinstance(CNV,pd.DataFrame):
         plotarr = [3.5,0.08,1,3.5,0.08,1]
@@ -104,35 +106,18 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
     ######################## plot the group bars 
     idx = 0
     
-    tmpidxcolor = 0
-    # process colors 
-    allgroups = []
-    for i in range(len(groups)):
-        group = groups[i]
-        setsortgroups = sorted(set(dfgroup[group]))
-        allgroups = allgroups + setsortgroups
-    allgroups = list(set(allgroups))
-    hcolors = inscolor(allgroups,cmtmp)
-    hcolors["Unk"] = u"#C1C1C1"
-    hcolors["unk"] = u"#C1C1C1"
+    #tmpidxcolor = 0
+    #hcolors = inscolor(allgroups,cmtmp);hcolors["Unk"] = u"#C1C1C1";hcolors["unk"] = u"#C1C1C1"
     for i in range(len(groups)):
         group = groups[i]
         ax = fig.add_subplot(GS[idx*2+4,0])
-        #ax.broken_barh([(110, 10),(120,10),(130,10),(150, 10)], (10, 9), facecolors='blue',alpha=0.5)
-        #ret_xlocations_x,setsortgroups = groupssplit(xlocations_x,hc[key])
         setsortgroups = sorted(set(dfgroup[group])) #### use "unk" as gray ## 9B9B9B
-        #colors = styles(len(setsortgroups)+tmpidxcolor)[0]
-        #colors = colors[tmpidxcolor:]
-        #if "Unk" in setsortgroups:
-        #    colors[setsortgroups.index("Unk")] = u"#C1C1C1"
-        tmpidxcolor += len(setsortgroups)
         legends = []
         for k in range(len(setsortgroups)):
-            #l = ax.broken_barh(ret_xlocations_x[i],(0,1),facecolors=colors[i],alpha=0.5)
             groupname = setsortgroups[k]
             tmpidx = dfgroup[group]==groupname
             if np.sum(tmpidx.values) <= 0:continue
-            l = ax.bar(xlocations[tmpidx.values],ones[tmpidx.values],width,color=hcolors[setsortgroups[k]],linewidth=0,alpha=1.0,align='center')
+            l = ax.bar(xlocations[tmpidx.values],ones[tmpidx.values],width,color=hcolors[setsortgroups[k]],linewidth=linewidth,alpha=1.0,align='center',edgecolor=edgecolor)
             legends.append(l)
         ax.set_ylabel(group,rotation=0,horizontalalignment="right",verticalalignment='center',fontsize=12)
         clean_axis(ax)
@@ -170,7 +155,8 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
     colors = styles(2)[0]
     legends = []
     idx = traitsurv.dframe["Death"]==0    
-    rects = barax.bar(xlocations[idx.values],traitsurv.dframe[idx]["Progression_free_survival"].values,width,color=colors[0],linewidth=0.0,alpha=1.0,align='edge')
+    rects = barax.bar(xlocations[idx.values],traitsurv.dframe[idx]["Progression_free_survival"].values,width,color=colors[0],linewidth=0.0,alpha=1.0,align='edge',label="Alive")
+    legends.append(rects)
     idx = traitsurv.dframe["Death"]==1
     rects = barax.bar(xlocations[idx.values],traitsurv.dframe[idx]["Progression_free_survival"].values,width,color=colors[1],linewidth=0.0,alpha=1.0,align='edge',label="Deceased")
     legends.append(rects)
@@ -178,14 +164,11 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
     barax.set_ylabel("PFS(Months)",rotation=0,horizontalalignment="right",verticalalignment='center',fontsize=12)
     retain_y(barax)
     ax = fig.add_subplot(GS[0,1])
-    #ax.legend(legends,["Deceased",],loc='center left', ncol=1,fancybox=False,frameon=False,numpoints=1,handlelength=0.75)
+    ax.legend(legends,["Alive","Deceased"],loc='center left', ncol=1,fancybox=False,frameon=False,numpoints=1,handlelength=0.75)
     clean_axis(ax)
     ##### plot mutation 
-    #ngene,nsamples = genesframe.shape
-    mutcolors = styles(len(mutlist),colorgrad="custom2")[0]
-    print(mutcolors)
-    print(mutlist)
-    mutcolors.append("#C0C0C0")
+    #mutcolors = styles(len(mutlist),colorgrad="custom2")[0]
+    #mutcolors.append("#C0C0C0")
     stackvAX = fig.add_subplot(GS[mutpos,0])
     ngenes, nsamples= genemutdf.shape
     legends = []
@@ -199,16 +182,16 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
             for j in range(len(mutlist)):
                 tmpidx = genemutdf.loc[genenames[i]] == mutlist[j]
                 if tmpidx.sum() >= 1:
-                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=mutcolors[j],linewidth=0,alpha=1.0,bottom=cumtmp[tmpidx.values],align='edge')
-                    if mutlist[j] not in htmp and mutlist[j] != "A":
+                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=hcolors[mutlist[j]],linewidth=linewidth,alpha=1.0,bottom=cumtmp[tmpidx.values],align='edge',edgecolor=edgecolor)
+                    if mutlist[j] not in htmp:# and mutlist[j] != "A":
                         legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
         else:
             cumtmp = 0
             for j in range(len(mutlist)):
                 tmpidx = genemutdf.loc[genenames[i]] == mutlist[j]
                 if tmpidx.sum() >= 1:
-                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=mutcolors[j],linewidth=0,alpha=1.0,align='edge')
-                    if mutlist[j] not in htmp and mutlist[j] != "A":
+                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=hcolors[mutlist[j]],linewidth=linewidth,alpha=1.0,align='edge',edgecolor=edgecolor)
+                    if mutlist[j] not in htmp:# and mutlist[j] != "A":
                         legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
 
     stackvAX.set_xlim(xlocations[0],xlocations[-1]+width)
@@ -225,23 +208,24 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
     ylocations = np.arange(ngenes)
     #n,p = stackvdata.shape
     stackvAX = fig.add_subplot(GS[mutpos,1])
-    linewidth = 0
+    linewidthtmp = 0
     alpha=0.8
     width=0.8
     #legends = ["Primary","Liver"] # chage to P
-    legends = ["1","0"] 
-        #legends = ["Relapse","metastasis"]
+    #legends = ["1","0"] 
+    #legends = ["Relapse","metastasis"]
+    legends  = list(APOBEC.index)
+    print(legends)
     stackvdata = APOBEC.loc[legends].values
     print(stackvdata)
     n,p = stackvdata.shape
     for i in range(n):
         if i:
-            print(i)
             cumtmp = cumtmp + np.asarray(stackvdata[i-1,:])
-            rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color=hcolors[legends[i]],linewidth=linewidth,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
+            rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color=hcolors[legends[i]],linewidth=linewidthtmp,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
         else:
             cumtmp = 0
-            rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color=hcolors[legends[i]],linewidth=linewidth,alpha=alpha,align='edge',label=legends[i])
+            rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color=hcolors[legends[i]],linewidth=linewidthtmp,alpha=alpha,align='edge',label=legends[i])
     stackvAX.legend(loc=0, fancybox=False,frameon=False,numpoints=1,handlelength=0.75)
     stackvAX.set_ylim(ylocations[0],ylocations[-1]+width)
     retain_x(stackvAX)
@@ -262,7 +246,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
                 for j in range(len(cnvlist)):
                     tmpidx = CNV.loc[genenames[i]] == cnvcutoff[j]
                     if tmpidx.sum() >= 1:
-                        rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.8,bottom=cumtmp[tmpidx.values],align='edge')
+                        rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=linewidth,edgecolor=edgecolor,alpha=0.8,bottom=cumtmp[tmpidx.values],align='edge')
                         if cnvlist[j] not in htmp:
                             legends.append(rects);legendsnames.append(cnvlist[j]);htmp[cnvlist[j]] = None
             else:
@@ -270,7 +254,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
                 for j in range(len(cnvlist)):
                     tmpidx = CNV.loc[genenames[i]] == cnvcutoff[j]
                     if tmpidx.sum() >= 1:
-                        rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.8,align='edge')
+                        rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=linewidth,edgecolor=edgecolor,alpha=0.8,align='edge')
                         if cnvlist[j] not in htmp:
                             legends.append(rects);legendsnames.append(cnvlist[j]);htmp[cnvlist[j]] = None
         stackvAX.set_xlim(xlocations[0],xlocations[-1]+width)
@@ -293,10 +277,10 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
         for i in range(n):
             if i:
                 cumtmp = cumtmp + np.asarray(stackvdata[i-1,:])
-                rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color="r",linewidth=linewidth,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
+                rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color="r",linewidth=linewidthtmp,alpha=alpha,left=cumtmp,align='edge',label=legends[i])
             else:
                 cumtmp = 0
-                rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color="b",linewidth=linewidth,alpha=alpha,align='edge',label=legends[i])
+                rects = stackvAX.barh(ylocations,np.asarray(stackvdata[i,:]),width,color="b",linewidth=linewidthtmp,alpha=alpha,align='edge',label=legends[i])
         stackvAX.legend(loc=0, fancybox=False,frameon=False,numpoints=1,handlelength=0.75)
         stackvAX.set_ylim(ylocations[0],ylocations[-1]+width)
         retain_x(stackvAX)

@@ -26,7 +26,7 @@ scripts = ['scripts/SFnetx',]
 
 metadata = {
 		"name":"rblib",
-		"version":"2.0.3",
+		"version":"2.0.4",
 		'description': "rblib",
 		'long_description': __doc__,
 		'author': "rongzhengqin",
@@ -38,7 +38,7 @@ metadata = {
 		'package_dir': package_dir,
 		'package_data': {'rblib': ['ref.types','ref.types.strands'],},
 		'requires': ['cython (>=0.21)'],
-		'ext_modules': cythonize("*/*.pyx",language_level=3)+[permutation,],
+		'ext_modules': cythonize("*/*.pyx",language_level=3) + [permutation,],
 		'scripts':scripts,
 		}
 

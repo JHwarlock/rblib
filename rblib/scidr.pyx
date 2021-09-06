@@ -5,13 +5,13 @@ from sklearn.manifold import MDS
 from sklearn.metrics import pairwise
 
 
-def doPCoA(Xnp,usedist='braycurtis',n_components=3,metric=True,eps=1e-8,n_jobs=1,random_state=None,dissimilarity='euclidean',n_init=4,max_iter=300,verbose=0,precompute=0):
+def doPCoA(Xnp,usedist='braycurtis',n_components=3,metric=False,eps=1e-8,n_jobs=1,random_state=None,dissimilarity='precomputed',n_init=4,max_iter=300,verbose=0,precompute=0):
 	if not precompute:
 		Xdist = pairwise.pairwise_distances(Xnp,metric="braycurtis",n_jobs=n_jobs)
 	else:
 		assert Xnp.shape[0] == Xnp.shape[1]
 		Xdist = Xnp
-	Xscore = doMDS(Xdist,n_components=n_components,metric=metric,n_init=n_init,max_iter=max_iter,verbose=verbose,eps=eps,n_jobs=n_jobs,random_state=random_state,dissimilarity="precomputed")
+	Xscore,stress = doMDS(Xdist,n_components=n_components,metric=metric,n_init=n_init,max_iter=max_iter,verbose=verbose,eps=eps,n_jobs=n_jobs,random_state=random_state,dissimilarity="precomputed")
 	return Xscore
 
 def doMDS(Xnp,n_components=3,metric=True,eps=1e-8,n_jobs=1,random_state=None,dissimilarity='euclidean',n_init=4,max_iter=300,verbose=0):

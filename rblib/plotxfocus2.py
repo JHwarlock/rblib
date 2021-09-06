@@ -77,9 +77,11 @@ def framey(ax):
     #ax.get_yaxis().set_ticks([])    
     for l in ax.get_xticklines() + ax.get_yticklines():
         l.set_markersize(0)
-def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_prefix="testplot",width=0.84,CNV=None,cnvlist=None,unkcolor=u"#E0E0E0",cmtmp="Dark2"): # input shold first to sort
-    fig = plt.figure(figsize=(8,6))
-    #mapGS = gridspec.GridSpec(12,1,wspace=0.0,hspace=0.0,height_ratios=[2,1,0.1,1,0.1,1,0.1,1,0.1,1,0.1,1]) ### 
+def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_prefix="testplot",width=0.84,CNV=None,cnvlist=None,hcolors=None,figsize=(8,6)): # input shold first to sort
+    if hcolor is None:
+        sys.stderr.write("[ERROR] color is not defined")
+        return 1
+    fig = plt.figure(figsize=figsize)
     num_traits_c = len(groups)
     plotarr = [17,0.2] # 1 use for legend for mutation , 
     
@@ -91,28 +93,16 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
     ones = np.ones(snnum) 
     ######################## plot the group bars 
     idx = 0
-    tmpidxcolor = 0
-    
     allgroups = []
     for i in range(len(groups)):
         group = groups[i]
         setsortgroups = sorted(set(dfgroup[group]))
         allgroups = allgroups + setsortgroups
     allgroups = list(set(allgroups))
-    hcolors = inscolor(allgroups,cmtmp)
-    hcolors["Unk"] = unkcolor
-    hcolors["unk"] = unkcolor
     for i in range(len(groups)):
         group = groups[i]
         ax = fig.add_subplot(GS[idx*2])
-        #ax.broken_barh([(110, 10),(120,10),(130,10),(150, 10)], (10, 9), facecolors='blue',alpha=0.5)
-        #ret_xlocations_x,setsortgroups = groupssplit(xlocations_x,hc[key])
         setsortgroups = sorted(set(dfgroup[group])) #### use "unk" as gray ## 9B9B9B
-        #colors = styles(len(setsortgroups)+tmpidxcolor,cm.Accent)[0]
-        #colors = colors[tmpidxcolor:]
-        #if "Unk" in setsortgroups:
-        #    colors[setsortgroups.index("Unk")] = unkcolor
-        tmpidxcolor += len(setsortgroups)
         legends = []
         for k in range(len(setsortgroups)):
             #l = ax.broken_barh(ret_xlocations_x[i],(0,1),facecolors=colors[i],alpha=0.5)
@@ -131,9 +121,7 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
     ##### plot mutation 
     #ngene,nsamples = genesframe.shape
     
-    mutcolors = styles(len(mutlist),colorgrad="custom2")[0]
-    mutcolors.append(unkcolor)
-    cnvcolors = ["#0076AF",unkcolor,"#E31915"]
+    #cnvcolors = ["#0076AF",unkcolor,"#E31915"]
     stackvAX = fig.add_subplot(GS[mutpos])
     ngenesmut, nsamples= genemutdf.shape
     ngenes = len(targetgenelist) 
@@ -157,14 +145,16 @@ def mutation_spec(snnum,targetgenelist,dfgroup,groups,mutlist,genemutdf,fig_pref
             for j in range(len(mutlist)):
                 tmpidx = genemutdf.loc[genename] == mutlist[j]
                 if tmpidx.sum() >= 1:
-                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.4,width,color=mutcolors[j],linewidth=0,alpha=1.0,bottom=cumtmp[tmpidx.values]+0.3,align='edge')
-                    if mutlist[j] not in htmp and mutlist[j] != "A":
+                    muttmpcolor = hcolor[mutlist[j]]
+                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.4,width,color=muttmpcolor,linewidth=0,alpha=1.0,bottom=cumtmp[tmpidx.values]+0.3,align='edge')
+                    if mutlist[j] not in htmp:# and (mutlist[j] != "A" ):
                         legends.append(rects);legendsnames.append(mutlist[j]);htmp[mutlist[j]] = None
             if genename not in CNV.index:continue
             for j in range(len(cnvlist)):
                 tmpidx =CNV.loc[genename] == cnvlist[j]
                 if tmpidx.sum() >= 1:
-                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvcolors[j],linewidth=0,alpha=0.5,bottom=cumtmp[tmpidx.values],align='edge')
+                    cnvtmpcolor = hcolor[cnvlist[j]]
+                    rects = stackvAX.bar(xlocations[tmpidx.values],ones[tmpidx.values]*0.9,width,color=cnvtmpcolor,linewidth=0,alpha=0.5,bottom=cumtmp[tmpidx.values],align='edge')
                     if cnvlist[j] not in htmp and cnvlist[j] != 0:
                         legendscnv.append(rects);legendsnamescnv.append(cnvnames[cnvlist[j]]);htmp[cnvlist[j]] = None
             cumtmp = cumtmp + np.ones(len(samplenames))

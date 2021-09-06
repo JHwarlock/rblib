@@ -443,7 +443,7 @@ def c_permutation(fvipname,fpername,p,ntimes=1000):
 		return pvalue
 	pvalue = (ctypes.c_double * p)()
 	ctypes.memset(ctypes.addressof(pvalue),0,ctypes.sizeof(pvalue))
-	ret = libpremutation.get_permutation(ctypes.c_char_p(fvipname),ctypes.c_char_p(fpername),ctypes.c_long(p),ctypes.c_long(ntimes),pvalue)
+	ret = libpremutation.get_permutation(ctypes.c_wchar_p(fvipname),ctypes.c_wchar_p(fpername),ctypes.c_long(p),ctypes.c_long(ntimes),pvalue) # python 3 采用Unicode编码，因此采用c_wchar_p 替代c_char_p
 	return pvalue
 
 def comb_replace(datalist,num):

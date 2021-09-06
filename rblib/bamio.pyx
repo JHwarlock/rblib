@@ -167,7 +167,7 @@ class Tabixobj(object):
 		self.idx = fn + ".tbi" if idx is None else idx
 	def checkidx(self):
 		if os.path.isfile(self.idx):
-			sys.stderr.write("[INFO] Index file '%s' exists. Do not build again !\n"%self.idx)
+			sys.stderr.write("[INFO] Index file '%s' exists.\n"%self.idx)
 			return 0
 		else:
 			sys.stderr.write("[ERROR] Index file '%s' not exists. Please build !\n"%self.idx)

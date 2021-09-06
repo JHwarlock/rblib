@@ -5,7 +5,8 @@ import sys
 # Ernst, J.; Nau, G. J.; Bar-Joseph, Z., Clustering short time series gene expression data. Bioinformatics 2005, 21 Suppl 1, i159-68.
 import numpy as np
 import itertools
-from scipy import misc
+from scipy import misc # python2
+from scipy import special # update scipy for python3  
 from rblib.mutilstats import comb_replace
 from rblib.enrich import fdr_core
 from rblib import statplot
@@ -96,7 +97,7 @@ def permute_bernoulli(exprs_matrix,profiles,raw_class_observe_counts):
 			idx = coefmat[0,1:] == np.nanmax(coefmat[0,1:])
 			#print idx
 			class_observe_counts[0:-1] += np.float64(idx)/np.sum(idx)
-	class_observe_counts = class_observe_counts/misc.factorial(p1)
+	class_observe_counts = class_observe_counts/special.factorial(p1)
 	retvalue = []
 	for i in range(m):
 		tmp_p = class_observe_counts[i]/ngenes
