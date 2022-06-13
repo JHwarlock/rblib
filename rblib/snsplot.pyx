@@ -47,6 +47,9 @@ def kdeplot_mul(data,xlabel='x',ylabel='y',cbarlabel="Density",cmap=["Blues","Re
 	plt.close()
 	return 0
 
+
+#def group_violinplots(df,xlabel,ylable,)
+
 if __name__ == "__main__":
 	x = np.random.multivariate_normal([1,1],[[1,0.8],[0.8,1]],size=1000)
 	x1 = x[:,0]

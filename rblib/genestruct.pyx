@@ -5,12 +5,13 @@ from rblib import seqio
 import pretty_errors
 """
 Contributors:
-    - rongzhengqin@basepedia.com
-    - zhush@basepedia.com
+    - rongzhengqin@basepedia.com    # interface to gene and transcript
+    - zhush@basepedia.com           # output to gtf format
 
 Update:
     - rongzhengqin@basepedia.com 2020-01-11 `line98 seqio.merge_region -> return List(List(int,int),int)`
     - rongzhengqin@basepedia.com 2020-01-27 `add Gffregion parser for gff file format`
+    - rongzhengqin@basepedia.com 2022-01-17 `add merged intron region for gene`
 """
 
 class Transcript(object):
@@ -175,7 +176,8 @@ class Gene(object):
         self.gene_stop       = None
         self.chrom           = None
         self.strand          = None
-        self.mergedexons      = []
+        self.mergedexons     = []
+        self.mergedintrons   = []
         self.parsed          = 0 # use to control its transcripts parsed 
     def __str__(self):
         strout = """================
@@ -219,6 +221,13 @@ include transcripts : %s\n================\n"""%(self.geneid,self.genename,self.
         allexons =  us_sort(allexons,0,1)
         #print(allexons)
         self.mergedexons = seqio.merge_region(allexons)[0]
+        ## add the merged introns,
+        mergedintrons = []
+        exon_num = len(self.mergedexons)
+        for i in range(exon_num-1):
+            mergedintrons.append([self.mergedexons[i][1],self.mergedexons[i+1][0]])
+        self.mergedintrons  = mergedintrons 
+
         #print(self.mergedexons)
         self.gene_start = self.mergedexons[0][0]
         self.gene_stop  = self.mergedexons[-1][-1]
@@ -369,11 +378,12 @@ def readrefgene(refgenefile): ## read refgene format
 
 
 class Gffregion(object):
-    def __init__(self,fmt='gff',gidattr="ID",gattr="Name",tidattr="ID",tattr="ID",pattr="Parent=",codonanno_start="CDS",codonanno_stop="CDS",ganno="gene,",tanno="rRNA,mRNA,tRNA",eanno="exon,CDS,UTR"):
+    def __init__(self,fmt='gff',gidattr="ID",gattr="Name",tidattr="ID",tattr="ID",pattr="Parent=",pidattr="protein_id=",codonanno_start="CDS",codonanno_stop="CDS",ganno="gene,",tanno="rRNA,mRNA,tRNA",eanno="exon,CDS,UTR"):
         self.fmt = fmt
         self.gidattr = Key_obj(gidattr)
         self.gattr   = Key_obj(gattr)
         self.tidattr = Key_obj(tidattr)
+        self.pidattr = Key_obj(pidattr)
         self.tattr   = Key_obj(tattr)
         self.codonanno_start = dict.fromkeys(codonanno_start.split(","),None)
         self.codonanno_stop  = dict.fromkeys(codonanno_stop.split(","),None)
@@ -419,20 +429,28 @@ class Gffregion(object):
                 tid   = self.tidattr.getvalue(commnet)
                 tname = self.tattr.getvalue(commnet)
                 gid   = self.pattr.getvalue(commnet)
-                assert gid in self.hgenes
+                proid = self.pidattr.getvalue(commnet)
+                try:
+                    assert gid in self.hgenes
+                except:
+                    sys.stderr.write("[WARN] Can not found the gid '%s'\n"%gid)
+                    continue
                 if gid in self.hgenes:
-                    tmptranscript = self.hgenes[gid].transcripts.setdefault(tid,Transcript(tid,transcriptname=tname,strand = strand,chrom=chrom,transcript_type=region_type,proteinid=tid))
+                    tmptranscript = self.hgenes[gid].transcripts.setdefault(tid,Transcript(tid,transcriptname=tname,strand = strand,chrom=chrom,transcript_type=region_type,proteinid=proid))
                     self.htranscripts[tid] = gid # to record the gene id
             elif region_type in self.eanno:
                 tid   = self.pattr.getvalue(commnet) # tid
+                proid = self.pidattr.getvalue(commnet)
                 try:
                     assert tid in self.htranscripts
                 except:
-                    sys.stderr.write("[ERROR] Can not found the tid '%s'\n"%tid)
-                    sys.exit(1)
+                    sys.stderr.write("[WARN] Can not found the tid '%s'\n"%tid)
+                    continue
+                    #sys.exit(1)
                 if tid in self.htranscripts:
                     gid = self.htranscripts[tid]
                     tmptranscript = self.hgenes[gid].transcripts[tid]
+                    tmptranscript.proteinid = proid if tmptranscript.proteinid == "-" else "-"
                     tmptranscript.add_exon(start-1,end)
             # self,start,end,gid,tid,chrom,strand,based=1,startanno = 1
             if region_type in self.codonanno_start:

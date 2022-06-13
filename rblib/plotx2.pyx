@@ -117,6 +117,7 @@ def mutation_spec(snnum,dfgroup,groups,stackdata,stacknames,traitsurv,mutlist,ge
             groupname = setsortgroups[k]
             tmpidx = dfgroup[group]==groupname
             if np.sum(tmpidx.values) <= 0:continue
+            #print(hcolors)
             l = ax.bar(xlocations[tmpidx.values],ones[tmpidx.values],width,color=hcolors[setsortgroups[k]],linewidth=linewidth,alpha=1.0,align='center',edgecolor=edgecolor)
             legends.append(l)
         ax.set_ylabel(group,rotation=0,horizontalalignment="right",verticalalignment='center',fontsize=12)

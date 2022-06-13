@@ -91,7 +91,7 @@ def plot_enrich(resultmark,resultothers,fig_prefix,xlabel,ylabel):
 #1427     ax1.scatter(res[:,0],res[:,1], marker='x', s=300, linewidths=2)
 
 
-def verrorbar(ynames,data,fig_prefix="simerrorbar",figsize=(5,4),log=False):
+def verrorbar(ynames,data,fig_prefix="simerrorbar",figsize=(5,4),log=False,xlim = None):
     # data n , mean , lower, upper, sig
     fig = plt.figure(figsize=figsize,dpi=300)
     ax = fig.add_subplot(111)
@@ -99,6 +99,8 @@ def verrorbar(ynames,data,fig_prefix="simerrorbar",figsize=(5,4),log=False):
     ax.errorbar(data[:,0], yaxis_locations, xerr=np.transpose(data[:,[1,2]]),markeredgewidth=1.25,elinewidth=1.25,capsize=3,fmt="s",c="k",markerfacecolor="white")
     ax.set_yticks(yaxis_locations)
     ax.set_yticklabels(ynames)
+    if xlim is not None:
+        ax.set_xlim(xlim[0],xlim[1])
     if log == True:
         ax.set_xscale("log")
     fig.tight_layout()
@@ -1352,6 +1354,7 @@ def stackv_bar_plot(data,xticks_labels,fig_prefix,xlabel,ylabel,title="",width=0
             ax.set_ylim(0,100)
             ax.set_xlim(0-1,p)
         else:
+            ax.set_ylim(0,np.max(np.sum(data,0))*1.05)
             ax.set_xlim(0-1,p)
 
     else:
@@ -1963,7 +1966,7 @@ def exprs_density(Xnp,colors,classlabels,figname_prefix="out",xlabel=None,ylabel
 
 
 
-def hist_groups(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,colors=None,rwidth=1,histtype="stepfilled",linewidth=0.5,xlim=None,ylim=None,hist=True,figsize=(6,2)):
+def hist_groups(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,colors=None,rwidth=1,histtype="stepfilled",linewidth=0.5,xlim=None,ylim=None,hist=True,figsize=(6,2),plotlines=[]): # [x1,x2 ...]
     """
     histtype='bar', rwidth=0.8
     stepfilled
@@ -1984,6 +1987,8 @@ def hist_groups(data,labels,xlabel,fig_prefix,bins=25,alpha=0.7,normed=True,colo
             ax.plot(xp,yp,color=colors[n-i-1],linestyle='--',lw=1.0)
         else:
             ax.plot(xp,yp,color=colors[n-i-1],linestyle='-',lw=2.0)
+    for xtmp in plotlines:
+        ax.plot([xtmp,xtmp],[0,1],'-o')
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.legend(labels,loc=0)
@@ -2285,8 +2290,8 @@ def cluster_pcolor_dist(Xdist,samplenames,annos,fig_prefix="test_cluster_pcolor"
     #heatmapAX.grid(visible=False)
     if markvalues is not None:
         show_values2(axi,markertmp,markfmt,fontsize=markfontsize)
-    print(row_denD['leaves'])
-    print(samplenames)
+    #print(row_denD['leaves'])
+    #print(samplenames)
     if plotxlabel:
         if not nosample:
             t_samplenames = [samplenames[i] for i in row_denD['leaves']]
@@ -2524,6 +2529,22 @@ def highfreq_mutmap(topgenesmuted,mut_stack,samplenames,annonames,fig_prefix="te
     plt.close()
     return 0
 
+def mesh_contour2(X,Y,Z,xlabel,ylabel,zlabel,figprefix = "test",color=cm.coolwarm,alpha=0.5,nlevels=8,face=False,figsize=(5.5,4)):
+    fig = plt.figure(figsize=figsize,dpi=300)
+    ax = fig.add_subplot(111)
+    levels = np.linspace(np.min(Z), np.max(Z), nlevels)
+    if face:
+        ax.contourf(X, Y, Z, levels=levels,cmap = color,alpha=alpha)
+    else:
+        ax.contour(X, Y, Z, levels=levels,cmap = color,alpha=alpha)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    fig.tight_layout()
+    plt.savefig(figprefix+".png",format='png',dpi=300)
+    plt.savefig(figprefix+".svg",format='svg',dpi=300)
+    plt.clf();plt.close()
+    return 0
+
 def mesh_contour(X,Y,Z,xlabel,ylabel,zlabel,figprefix = "test",color=cm.coolwarm,alpha=0.3):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -2585,7 +2606,7 @@ def plot_contest(data,ynames,xlabel=None,ylabel=None,fig_prefix="plot_ContEst"):
     plt.clf();plt.close();
     return 0
 
-def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",colornorm = True,nosample=False,nogene=False,plotxlabel=1,plotylabel=1,cbarlabel="Expression",genecolors=None,samplecolors=None,cmap='RdYlBu_r', trees = 3,numshow=80,metric="euclidean",usepcolor=0,normratio=1.0,samplecolormap="Dark2"):
+def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",colornorm = True,nosample=False,nogene=False,plotxlabel=1,plotylabel=1,cbarlabel="Expression",genecolors=None,samplecolors=None,cmap='RdYlBu_r', trees = 3,numshow=100,metric="euclidean",usepcolor=0,normratio=1.0,samplecolormap="Dark2"):
     n,p = Xnp.shape
     #print n,p,len(samplenames),len(annonames)
     assert n == len(samplenames) and p == len(annonames)
@@ -2690,7 +2711,14 @@ def cluster_heatmap(Xnp,samplenames,annonames,fig_prefix="test_cluster_heatmap",
             genecolors   = np.asarray(genecolors)[row_denD['leaves']]
             #print genecolors
         row_cbAX = fig.add_subplot(heatmapGS[samples_l-1,2])
-        print(np.asarray([genecolors.tolist(),]).T)
+        #print("##########",np.asarray([genecolors.tolist(),]).T)
+        tmp_t_annonames = [annonames[i] for i in row_denD['leaves']]
+        tmp_cluster     = genecolors
+        ftmp = open("tmp_cluster_result.lst","w")
+        for i in range(len(tmp_t_annonames)):
+            ftmp.write("%s\tCluster%d\n"%(tmp_t_annonames[i],tmp_cluster[i]))
+        ftmp.close()
+
         row_axi = row_cbAX.imshow(np.asarray([genecolors.tolist(),]).T,interpolation='nearest',aspect='auto',origin='lower',alpha=0.6)
         clean_axis(row_cbAX)
     tickoffset = 0

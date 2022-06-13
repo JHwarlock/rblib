@@ -26,7 +26,7 @@ scripts = ['scripts/SFnetx',]
 
 metadata = {
 		"name":"rblib",
-		"version":"2.0.4",
+		"version":"2.1.3",
 		'description': "rblib",
 		'long_description': __doc__,
 		'author': "rongzhengqin",
